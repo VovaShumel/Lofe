@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="80dp"
+    android:layout_height="100dp">
+
+    <ImageView
+        android:id="@+id/ivTag2Img"
+        android:contentDescription=""
+        android:layout_width="match_parent"
+        android:layout_height="80dp" />
+
+    <TextView
+        android:id="@+id/tvTag2Text"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_alignTop="@+id/tvTagChecked"
+        android:layout_toLeftOf="@+id/tvTagChecked"
+        android:textColor="@color/colorBlack"
+        android:textSize="8sp" />
+
+
+    <CheckBox
+        android:id="@+id/cbTag2Checked"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_below="@+id/ivTagImg" />
+
+
+</RelativeLayout>
