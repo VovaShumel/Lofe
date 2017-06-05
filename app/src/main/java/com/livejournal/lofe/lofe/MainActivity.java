@@ -1,16 +1,10 @@
 package com.livejournal.lofe.lofe;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.app.DialogFragment;
-import android.util.Log;
-import android.view.View;
-import android.content.Context;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
@@ -19,14 +13,12 @@ import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.ListView;
-//import android.support.design.widget.FloatingActionButton;
 //import android.support.v7.widget.Toolbar;
-
-import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
@@ -80,18 +72,18 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         // создаем лоадер для чтения данных
         getSupportLoaderManager().initLoader(0, null, this);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
-//                intent.putExtra("id", 0);                               // код "0", сигнализурющий о том, что запись нужно
-//                // не редактировать, а добавлять
-//                startActivity(intent);
-//                // получаем новый курсор с данными
-//                getSupportLoaderManager().getLoader(0).forceLoad();
-//            }
-//        });
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
+                intent.putExtra("id", 0);                               // код "0", сигнализурющий о том, что запись нужно
+                // не редактировать, а добавлять
+                startActivity(intent);
+                // получаем новый курсор с данными
+                getSupportLoaderManager().getLoader(0).forceLoad();
+            }
+        });
 
     }
 
@@ -102,16 +94,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         Intent intent;
 
         switch (v.getId()) {
-
-            case R.id.imgBtnAddRecord:
-
-                intent = new Intent(this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
-                intent.putExtra("id", 0);                               // код "0", сигнализурющий о том, что запись нужно
-                // не редактировать, а добавлять
-                startActivity(intent);
-                // получаем новый курсор с данными
-                getSupportLoaderManager().getLoader(0).forceLoad();
-                break;
 
             case R.id.button:
                 intent = new Intent(this, ChooseTagsActivity.class);  // Будем передавать в экран AddEditRecord
@@ -199,12 +181,12 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    static class MyCursorLoader extends CursorLoader {
+    static private class MyCursorLoader extends CursorLoader {
 
         DB db;
         long id;
 
-        public MyCursorLoader(Context context, DB db, long id) {
+        private MyCursorLoader(Context context, DB db, long id) {
             super(context);
             this.db = db;
             this.id = id;
