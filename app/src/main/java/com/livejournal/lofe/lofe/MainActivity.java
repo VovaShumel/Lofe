@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.ListView;
-//import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
@@ -30,12 +29,9 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
     SimpleCursorAdapter scAdapter;
     Button btn;
 
-    /** Called when the activity is first created. */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //dlg1 = new ChooseTags_Dialog();
 
         // открываем подключение к БД
         db = new DB(this);
@@ -58,13 +54,8 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-//                Log.d(LOG_TAG, "itemClick: position = " + position + ", id = "
-//                        + id);
-                //MyLog.d("Нажатие");
                 Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
-                //Intent intent = new Int
                 intent.putExtra("id", id);                         // id записи, которую необходимо отредактировать
-                // не редактировать, а добавлять
                 startActivity(intent);
             }
         });
@@ -76,59 +67,43 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
-                intent.putExtra("id", 0);                               // код "0", сигнализурющий о том, что запись нужно
-                // не редактировать, а добавлять
+                Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class); // Будем передавать в экран AddEditRecord
+                intent.putExtra("id", 0);                                                   // код "0", сигнализурющий о том, что запись нужно
+                                                                                            // не редактировать, а добавлять
                 startActivity(intent);
-                // получаем новый курсор с данными
-                getSupportLoaderManager().getLoader(0).forceLoad();
+                getSupportLoaderManager().getLoader(0).forceLoad();                         // получаем новый курсор с данными
             }
         });
-
     }
-
 
     // обработка нажатия кнопки
     public void onButtonClick(View v) {
-
         Intent intent;
-
         switch (v.getId()) {
-
             case R.id.button:
                 intent = new Intent(this, ChooseTagsActivity.class);  // Будем передавать в экран AddEditRecord
-                //startActivity(intent);
                 startActivityForResult(intent, 1);
                 break;
-
             case R.id.buttonToClock:
                 intent = new Intent(this, AlarmActivity.class);
                 startActivity(intent);
-                //startActivityForResult(intent, 1);
                 break;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        MyLog.d("Мы вернулись!");
         if (data == null) {return;}
-        //long id = data.getLongExtra("id", 0);
         idd = data.getLongExtra("id", 0);
-//        MyLog.d(id + "");
-//        if (id > 0) {
-        //idd = id;
         MyLog.d(idd + "");
-        //getSupportLoaderManager().initLoader(0, null, this);
         getSupportLoaderManager().restartLoader(0, null, this);
         getSupportLoaderManager().getLoader(0).forceLoad();
-//        }
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
+        //menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
         menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
     }
 
