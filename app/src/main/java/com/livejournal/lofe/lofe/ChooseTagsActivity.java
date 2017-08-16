@@ -22,17 +22,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+// Активити выбора ярлыков для сортировки по ярлыкам
 public class ChooseTagsActivity extends FragmentActivity implements View.OnClickListener,
                                                         LoaderCallbacks<Cursor> {
-    Button ibOk;
-    Button ibCncl;
+    Button ibOk, ibNone, ibAll, ibCncl;
     GridView gvTags;
     DB db;
 
     long[] idTags = {0};
 
     TagsAdapter tagsAdapter;
-SimpleCursorAdapter scAdapter;
+    SimpleCursorAdapter scAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,55 +42,48 @@ SimpleCursorAdapter scAdapter;
         ibOk = (Button) findViewById(R.id.btnChooseTagsDialogOk);
         ibOk.setOnClickListener(this);
 
+        ibNone = (Button) findViewById(R.id.btnChooseTagsDialogNone);
+        ibNone.setOnClickListener(this);
+
+        ibAll = (Button) findViewById(R.id.btnChooseTagsDialogAll);
+        ibAll.setOnClickListener(this);
+
         ibCncl = (Button) findViewById(R.id.btnChooseTagsDialogCncl);
         ibCncl.setOnClickListener(this);
 
-        // открываем подключение к БД
-        db = new DB(this);
+        db = new DB(this);                                                                          // открываем подключение к БД
         db.open();
 
-        // формируем столбцы сопоставления
-        String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };
+        String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };                      // формируем столбцы сопоставления
         int[] to = new int[] { R.id.tvTag2Text, R.id.cbTag2Checked};
 
-        // создааем адаптер и настраиваем список
-        tagsAdapter = new TagsAdapter(this, R.layout.item_tag2, null, from, to, 0);
-        //scAdapter = new TagsAdapter(this, R.layout.tag2, null, from, to, 0);
+        tagsAdapter = new TagsAdapter(this, R.layout.item_tag2, null, from, to, 0);                 // создааем адаптер и настраиваем список
         gvTags = (GridView) findViewById(R.id.gvDialogTags);
         gvTags.setAdapter(tagsAdapter);
-        //gvTags.setAdapter(scAdapter);
 
-
-        MyLog.d("Зашли в фильтр");
-
-        // создаем лоадер для чтения данных
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(0, null, this);                                        // создаем лоадер для чтения данных
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btnChooseTagsDialogNone:
+                //tagsAdapter.setAllTags();
+                break;
+            case R.id.btnChooseTagsDialogAll:
+                tagsAdapter.setAllTags();
+                break;
             case R.id.btnChooseTagsDialogOk:
             case R.id.btnChooseTagsDialogCncl:
                 db.close();
-                //Intent intent = new Intent(this, Main.class);
-                //intent.putExtra("idTags", idTags);
                 ArrayList<Integer> chTaags = tagsAdapter.getCheckedTags();
                 Intent intent = new Intent();
                 if (chTaags.size() > 0) {
-                    //intent.putExtra("id", (long)chTaags.get(0));
                     intent.putExtra("id", chTaags.get(0));
-                    //MyLog.d("long "+ (long) chTaags.get(0) + "");
-//                    for (int i = 0; i < chTaags.size(); i++) {
-//                        MyLog.d((int)chTaags.get(i) + "");
-//                    }
                 } else {
                     intent.putExtra("id", 0);
                 }
                 setResult(RESULT_OK, intent);
                 finish();
-
-
-                //startActivity(intent);
         }
     }
 
@@ -119,7 +112,6 @@ SimpleCursorAdapter scAdapter;
 
         @Override
         public Cursor loadInBackground() {
-            //Cursor cursor =
             return db.getAllTag();
         }
     }

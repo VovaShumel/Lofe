@@ -42,7 +42,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     long id;
     DB db;
 
-    //SimpleCursorAdapter scAdapter;
     Tags2Adapter scAdapter;
 
     @Override
@@ -65,37 +64,24 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         tvDateTime = (TextView) findViewById(R.id.tvADTDateTime);
         tvDateTime.setOnClickListener(this);
 
-        // открываем подключение к БД
-        db = new DB(this);
+        db = new DB(this);                                                                          // открываем подключение к БД
         db.open();
 
         etRecordText = (EditText) findViewById(R.id.etRecordText);
 
-        if (id > 0) {   // редактирование записи
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);   // Чтобы автоматически не отображалась
-                                                                                                // клавиатура с фокусом ввода в etRecordText
+        if (id > 0) {                                                                               // редактирование записи
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);       // Чтобы автоматически не отображалась
+                                                                                                    // клавиатура с фокусом ввода в etRecordText
             etRecordText.setText(db.getRecordText(id));
-        } else {
-            tvDateTime.setTextColor(0);
+        } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
+            tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
             tvDateTime.setText("Время и дата не заданы");
         }
-            // Если же новая запись, то сразу должна появляться клавиатура, фокус ввода -- поле ввода текста записи
 
-//        // формируем столбцы сопоставления
-//        String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };
-//        int[] to = new int[] { R.id.tvTagText, R.id.tvTagChecked};
-//
-//        // создааем адаптер и настраиваем список
-//        scAdapter = new SimpleCursorAdapter(this, R.layout.tag, null, from, to, 0);
-//        gvTags = (GridView) findViewById(R.id.gvTags);
-//        gvTags.setAdapter(scAdapter);
-
-        // формируем столбцы сопоставления
-        String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };
+        String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };                      // формируем столбцы сопоставления
         int[] to = new int[] { R.id.tvTag2Text, R.id.cbTag2Checked };
 
-        // создааем адаптер и настраиваем список
-        scAdapter = new Tags2Adapter(this, R.layout.item_tag2, null, from, to, 0);
+        scAdapter = new Tags2Adapter(this, R.layout.item_tag2, null, from, to, 0);                  // создааем адаптер и настраиваем список
         gvTags = (GridView) findViewById(R.id.gvTags);
         gvTags.setAdapter(scAdapter);
 
@@ -104,9 +90,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         gvTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                switch ((int)id) { // TODO теоретически возможная ошибка
-                    case 11:
-                        //intent = new Intent(this, Alarm_Activity.class);  // Будем передавать в экран AddEditRecord
+                switch ((int)id) {                                                                  // TODO теоретически возможная ошибка
+                    case 11:                                                                        // TODO что за? Пиши подробнее
                         MyLog.d("Открыли будильник");
                         startActivity(new Intent(AddEditRecordActivity.this, AlarmActivity.class));
                         MyLog.d("Закрыли будильник");
@@ -119,17 +104,14 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                     db.invertTag(idRecord, id);
                 } else {
                     AddEditRecordActivity.this.id = db.addRecordText(etRecordText.getText().toString());
-                    //db.assignTag(AddEditRecord.this.id, id);
                     MyLog.d("Назначили ярлык" + db.assignTag(AddEditRecordActivity.this.id, id));
                 }
             }
         });
 
-        // добавляем контекстное меню к списку
-        registerForContextMenu(gvTags);
+        registerForContextMenu(gvTags);                                                             // добавляем контекстное меню к списку
 
-        // создаем лоадер для чтения данных
-        getSupportLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(0, null, this);                                        // создаем лоадер для чтения данных
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -140,33 +122,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     }
 
     public boolean onContextItemSelected(MenuItem item) {
-
-        //Toast.makeText(AddEditRecord.this, "бебебе111", Toast.LENGTH_SHORT).show();
-
-        // получаем из пункта контекстного меню данные по пункту списка
-//        AdapterView.AdapterContextMenuInfo acmi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-//        switch (item.getItemId()) {
-//
-//            case CM_EDIT_ID:
-//                // извлекаем id записи и вызываем меню редактирования записи
-//                Intent intent = new Intent(this, AddEditRecord.class);  // Будем передавать в экран AddEditRecord
-//                //Intent intent = new Int
-//                intent.putExtra("id", acmi.id);                         // id записи, которую необходимо отредактировать
-//                // не редактировать, а добавлять
-//                startActivity(intent);
-//                break;
-//
-//            case CM_DELETE_ID:
-//                // извлекаем id записи и удаляем соответствующую запись в БД
-//                db.delRec(acmi.id);
-//                break;
-//
-//            default:
-//                return super.onContextItemSelected(item);
-//        }
-        // получаем новый курсор с данными
-        //getSupportLoaderManager().getLoader(0).forceLoad();
         return true;
     }
 
@@ -183,13 +138,9 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                     }
 
                     ArrayList<ChTag> chTags = scAdapter.getChTags();
-                    //MyLog.d("Таг меняется задумчиво9");
                     for(int i = 0; i < chTags.size(); i++) {
                         MyLog.d("Таг меняется задумчиво");
                         db.invertTag(id, chTags.get(i).id);
-//                        if (chTags.get(i).checked) {
-//                            db.
-//                        }
                     }
 
                 } else {
@@ -203,8 +154,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                 break;
 
             case R.id.btnAddTag:
-                Intent intent = new Intent(this, AddEditTagActivity.class); // Будем передавать в экран AddEditTag
-                intent.putExtra("id", 0);                               // Новый ярлык
+                Intent intent = new Intent(this, AddEditTagActivity.class);                         // Будем передавать в экран AddEditTag
+                intent.putExtra("id", 0);                                                           // Новый ярлык
                 startActivity(intent);
                 break;
         }
@@ -244,14 +195,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         @Override
         public Cursor loadInBackground() {
             Cursor cursor;
-//            if (id > 0) {
-//                //cursor = db.getTagsDataByID(id);
-//                cursor = db.getAllTag();
-//            } else {
-                //cursor = db.getAllTag();
             MyLog.d("ID записи, для которой задано посмотреть ярлыки = " + id);
                 cursor = db.getRecordTags(id);
-           // }
             return cursor;
         }
     }
