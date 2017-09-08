@@ -55,9 +55,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         ibOk = (ImageButton) findViewById(R.id.imgBtnOkEdtRecord);
         ibOk.setOnClickListener(this);
 
-        ibCncl = (ImageButton) findViewById(R.id.imgBtnCnclEdtRecord);
-        ibCncl.setOnClickListener(this);
-
         btnAddTag = (Button) findViewById(R.id.btnAddTag);
         btnAddTag.setOnClickListener(this);
 
@@ -148,9 +145,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                         db.delRec(id);
                     }
                 }
-                break;
-            
-            case R.id.imgBtnCnclEdtRecord:
                 break;
 
             case R.id.btnAddTag:
