@@ -84,10 +84,10 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
                 intent = new Intent(this, ChooseTagsActivity.class);  // Будем передавать в экран AddEditRecord
                 startActivityForResult(intent, 1);
                 break;
-            case R.id.buttonToClock:
-                intent = new Intent(this, AlarmActivity.class);
-                startActivity(intent);
-                break;
+//            case R.id.buttonToClock:
+//                intent = new Intent(this, AlarmActivity.class);
+//                startActivity(intent);
+//                break;
         }
     }
 
