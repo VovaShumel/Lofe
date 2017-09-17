@@ -33,22 +33,16 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // открываем подключение к БД
         db = new DB(this);
         db.open();
 
-        MyLog.d("dg");
-
-        // формируем столбцы сопоставления
         String[] from = new String[] { DB.R_COLUMN_TEXT };
         int[] to = new int[] {R.id.tv__item_record__recordText};
 
-        // создааем адаптер и настраиваем список
         scAdapter = new SimpleCursorAdapter(this, R.layout.item_record, null, from, to, 0);
         lvData = (ListView) findViewById(R.id.lvData);
         lvData.setAdapter(scAdapter);
 
-        // добавляем контекстное меню к списку
         registerForContextMenu(lvData);
 
         lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -60,7 +54,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
             }
         });
 
-        // создаем лоадер для чтения данных
         getSupportLoaderManager().initLoader(0, null, this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -76,7 +69,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         });
     }
 
-    // обработка нажатия кнопки
     public void onButtonClick(View v) {
         Intent intent;
         switch (v.getId()) {
@@ -84,10 +76,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
                 intent = new Intent(this, ChooseTagsActivity.class);  // Будем передавать в экран AddEditRecord
                 startActivityForResult(intent, 1);
                 break;
-//            case R.id.buttonToClock:
-//                intent = new Intent(this, AlarmActivity.class);
-//                startActivity(intent);
-//                break;
         }
     }
 
@@ -95,7 +83,6 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
         idd = data.getLongExtra("id", 0);
-        MyLog.d(idd + "");
         getSupportLoaderManager().restartLoader(0, null, this);
         getSupportLoaderManager().getLoader(0).forceLoad();
     }
@@ -109,36 +96,29 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
 
     public boolean onContextItemSelected(MenuItem item) {
 
-        // получаем из пункта контекстного меню данные по пункту списка
-        AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();
+        AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();  // получаем из пункта контекстного меню данные о пункте списка
 
         switch (item.getItemId()) {
 
             case CM_EDIT_ID:
-                // извлекаем id записи и вызываем меню редактирования записи
-                Intent intent = new Intent(this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
-                //Intent intent = new Int
-                intent.putExtra("id", acmi.id);                         // id записи, которую необходимо отредактировать
-                // не редактировать, а добавлять
+                Intent intent = new Intent(this, AddEditRecordActivity.class);  // извлекаем id записи и вызываем меню редактирования записи
+                intent.putExtra("id", acmi.id);
                 startActivity(intent);
                 break;
 
             case CM_DELETE_ID:
-                // извлекаем id записи и удаляем соответствующую запись в БД
-                db.delRec(acmi.id);
+                db.delRec(acmi.id); // извлекаем id записи и удаляем соответствующую запись в БД
                 break;
 
             default:
                 return super.onContextItemSelected(item);
         }
-        // получаем новый курсор с данными
-        getSupportLoaderManager().getLoader(0).forceLoad();
+        getSupportLoaderManager().getLoader(0).forceLoad();     // получаем новый курсор с данными
         return true;
     }
 
     protected void onDestroy() {
         super.onDestroy();
-        // закрываем подключение при выходе
         db.close();
     }
 
@@ -170,18 +150,12 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         @Override
         public Cursor loadInBackground() {
             Cursor cursor;
-            MyLog.d("Курсор обновляется");
             if (id == 0)
                 cursor = db.getAllData();
             else {
                 cursor = db.getTagedRecord(id);
 
             }
-//            try {
-//                TimeUnit.SECONDS.sleep(3);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
             return cursor;
         }
     }

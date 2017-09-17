@@ -67,7 +67,6 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnChooseTagsDialogNone:
-                //tagsAdapter.setAllTags();
                 break;
             case R.id.btnChooseTagsDialogAll:
                 tagsAdapter.setAllTags();

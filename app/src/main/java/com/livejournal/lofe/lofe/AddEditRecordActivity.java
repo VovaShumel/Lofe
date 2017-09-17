@@ -25,7 +25,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static com.livejournal.lofe.lofe.R.color.colorInactive;
 
@@ -38,8 +40,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     ImageButton ibCncl;
     Button btnAddTag;
     GridView gvTags;
-    TextView tvDateTime;
-    long id;
+    TextView tvDate;
+    long id, ms;
     DB db;
 
     Tags2Adapter scAdapter;
@@ -58,8 +60,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         btnAddTag = (Button) findViewById(R.id.btnAddTag);
         btnAddTag.setOnClickListener(this);
 
-        tvDateTime = (TextView) findViewById(R.id.tvADTDateTime);
-        tvDateTime.setOnClickListener(this);
+        tvDate = (TextView) findViewById(R.id.tvDate);
+        tvDate.setOnClickListener(this);
 
         db = new DB(this);                                                                          // открываем подключение к БД
         db.open();
@@ -71,8 +73,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                                                                                                     // клавиатура с фокусом ввода в etRecordText
             etRecordText.setText(db.getRecordText(id));
         } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
-            tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
-            tvDateTime.setText("Время и дата не заданы");
+            //tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
+            //tvDateTime.setText("Время и дата не заданы");
         }
 
         String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };                      // формируем столбцы сопоставления
@@ -134,9 +136,10 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                         id = db.addRecordText(s);
                     }
 
+                    db.edtRecordDate(id, ms);
+
                     ArrayList<ChTag> chTags = scAdapter.getChTags();
                     for(int i = 0; i < chTags.size(); i++) {
-                        MyLog.d("Таг меняется задумчиво");
                         db.invertTag(id, chTags.get(i).id);
                     }
 
@@ -145,20 +148,28 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                         db.delRec(id);
                     }
                 }
+                db.close();
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
                 break;
 
             case R.id.btnAddTag:
-                Intent intent = new Intent(this, AddEditTagActivity.class);                         // Будем передавать в экран AddEditTag
+                intent = new Intent(this, AddEditTagActivity.class);                         // Будем передавать в экран AddEditTag
                 intent.putExtra("id", 0);                                                           // Новый ярлык
                 startActivity(intent);
                 break;
+            case R.id.tvDate:
+                intent = new Intent(this, AlarmActivity.class);
+                startActivityForResult(intent, 1);
+                break;
         }
+    }
 
-        if (v.getId() != R.id.btnAddTag) {
-            db.close();
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {return;}
+        ms = data.getLongExtra("ms", 0);
+        tvDate.setText(new SimpleDateFormat("dd.MM.yy hh:mm").format(new Date(ms)));
     }
 
     @Override

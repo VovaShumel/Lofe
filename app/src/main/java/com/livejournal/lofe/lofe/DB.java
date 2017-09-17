@@ -18,6 +18,7 @@ public class DB {
 
     public static final String R_COLUMN_ID = "_id";
     public static final String R_COLUMN_TEXT = "text";
+    public static final String R_COLUMN_DATE = "alarm_date";
 
     private static final String TAG_TABLE = "TAG";
     public static final String TAG_COLUMN_ID = "_id";
@@ -126,6 +127,14 @@ public class DB {
     public void edtRecordText(String txt_record, long id) {
         ContentValues cv = new ContentValues();
         cv.put(R_COLUMN_TEXT, txt_record);
+        selectionArgs = new String[] {id + ""};
+        mDB.update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", selectionArgs);
+    }
+
+
+    public void edtRecordDate(long id, long msDate) {
+        ContentValues cv = new ContentValues();
+        cv.put(R_COLUMN_DATE, msDate);
         selectionArgs = new String[] {id + ""};
         mDB.update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", selectionArgs);
     }
