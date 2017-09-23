@@ -17,7 +17,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
 
@@ -26,6 +28,7 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
     public ListView lvData;
     DB db;
     long idd = 0;
+    int position = 0;
     SimpleCursorAdapter scAdapter;
     Button btn;
 
@@ -50,9 +53,14 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
                                     int position, long id) {
                 Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
                 intent.putExtra("id", id);                         // id записи, которую необходимо отредактировать
+                //intent.putExtra("position", lvData.getFirstVisiblePosition());
+                intent.putExtra("position", position);
                 startActivity(intent);
             }
         });
+
+        Intent intent = getIntent();
+        position = intent.getIntExtra("position", 0);
 
         getSupportLoaderManager().initLoader(0, null, this);
 
@@ -67,6 +75,15 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
                 getSupportLoaderManager().getLoader(0).forceLoad();                         // получаем новый курсор с данными
             }
         });
+    }
+
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        if (position > 0) {
+            lvData.smoothScrollToPositionFromTop(position, 0, 0);
+            position = 0;
+        }
     }
 
     public void onButtonClick(View v) {

@@ -95,6 +95,19 @@ public class DB {
         return s;
     }
 
+    public long getRecordDate(long id) {
+        long l = 0;
+        columns = new String[] {R_COLUMN_DATE};
+        selectionArgs = new String[] {id + ""};
+        Cursor c = mDB.query(RECORD_TABLE, columns, R_COLUMN_ID + " = ?", selectionArgs, null, null, null);
+        if (c != null) {
+            if (c.moveToFirst()) {
+                l = c.getLong(0);
+            }
+        }
+        return l;
+    }
+
 //    public Cursor getTagsDataByID(long id) {
 //
 //

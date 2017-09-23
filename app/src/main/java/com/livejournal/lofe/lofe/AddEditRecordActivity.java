@@ -42,6 +42,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     GridView gvTags;
     TextView tvDate;
     long id, ms;
+    int position;
     DB db;
 
     Tags2Adapter scAdapter;
@@ -53,6 +54,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
         Intent intent = getIntent();
         id = intent.getLongExtra("id", 0);
+        position = intent.getIntExtra("position", 0);
 
         ibOk = (ImageButton) findViewById(R.id.imgBtnOkEdtRecord);
         ibOk.setOnClickListener(this);
@@ -71,7 +73,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         if (id > 0) {                                                                               // редактирование записи
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);       // Чтобы автоматически не отображалась
                                                                                                     // клавиатура с фокусом ввода в etRecordText
-            etRecordText.setText(db.getRecordText(id));
+            etRecordText.setText(db.getRecordText(id)); // TODO совместить эти действия в одно
+            SetDateText(db.getRecordDate(id));
         } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
             //tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
             //tvDateTime.setText("Время и дата не заданы");
@@ -129,7 +132,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
             case R.id.imgBtnOkEdtRecord:
                 String s = etRecordText.getText().toString();
-                if (s != null) {
+                if (s != null) { // TODO тут, вроде, надо проверять на на нулл, а на пустую строку
                     if (id > 0) {
                         db.edtRecordText(s, id);
                     } else {
@@ -150,6 +153,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                 }
                 db.close();
                 Intent intent = new Intent(this, MainActivity.class);
+                //intent.putExtra("id", id);
+                intent.putExtra("position", position);
                 startActivity(intent);
                 break;
 
@@ -165,11 +170,19 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         }
     }
 
+    void SetDateText(long ms) {
+        if (ms == 0)
+            tvDate.setText(R.string.DATE_UNDEFINED);
+        else
+            tvDate.setText(new SimpleDateFormat("dd.MM.yy hh:mm").format(new Date(ms)));
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null) {return;}
+        if (data == null) {return;}         // TODO тут тоже соответственно упростить?
         ms = data.getLongExtra("ms", 0);
-        tvDate.setText(new SimpleDateFormat("dd.MM.yy hh:mm").format(new Date(ms)));
+        SetDateText(ms);
     }
 
     @Override

@@ -18,16 +18,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 // Активити выбора ярлыков для сортировки по ярлыкам
 public class ChooseTagsActivity extends FragmentActivity implements View.OnClickListener,
                                                         LoaderCallbacks<Cursor> {
-    Button ibOk, ibNone, ibAll, ibCncl;
+    Button ibOk, ibNone, ibAll;
+    TextView tvDate;
     GridView gvTags;
     DB db;
+    long ms;
 
     long[] idTags = {0};
 
@@ -48,8 +53,8 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         ibAll = (Button) findViewById(R.id.btnChooseTagsDialogAll);
         ibAll.setOnClickListener(this);
 
-        ibCncl = (Button) findViewById(R.id.btnChooseTagsDialogCncl);
-        ibCncl.setOnClickListener(this);
+        tvDate = (TextView) findViewById(R.id.tvActChTagsDate);
+        tvDate.setOnClickListener(this);
 
         db = new DB(this);                                                                          // открываем подключение к БД
         db.open();
@@ -66,16 +71,20 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
 
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.tvActChTagsDate:
+                //Toast.makeText(this, "На дату нажимается", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, AlarmActivity.class);
+                startActivityForResult(intent, 1);
+                break;
             case R.id.btnChooseTagsDialogNone:
                 break;
             case R.id.btnChooseTagsDialogAll:
                 tagsAdapter.setAllTags();
                 break;
             case R.id.btnChooseTagsDialogOk:
-            case R.id.btnChooseTagsDialogCncl:
                 db.close();
                 ArrayList<Integer> chTaags = tagsAdapter.getCheckedTags();
-                Intent intent = new Intent();
+                intent = new Intent();
                 if (chTaags.size() > 0) {
                     intent.putExtra("id", chTaags.get(0));
                 } else {
@@ -83,7 +92,18 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 }
                 setResult(RESULT_OK, intent);
                 finish();
+                break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {return;}         // TODO тут тоже соответственно упростить?
+        ms = data.getLongExtra("ms", 0);
+        if (ms == 0)
+            tvDate.setText(R.string.DATE_UNDEFINED);
+        else
+            tvDate.setText("Не раньше " + new SimpleDateFormat("dd.MM.yy").format(new Date(ms)));
     }
 
     @Override
@@ -113,5 +133,10 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         public Cursor loadInBackground() {
             return db.getAllTag();
         }
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 }
