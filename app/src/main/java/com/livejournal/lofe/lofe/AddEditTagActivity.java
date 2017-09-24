@@ -27,10 +27,6 @@ public class AddEditTagActivity extends Activity implements View.OnClickListener
         ibOk = (ImageButton) findViewById(R.id.imgBtnOkEdtTag);
         ibOk.setOnClickListener(this);
 
-        ibCncl = (ImageButton) findViewById(R.id.imgBtnCnclEdtTag);
-        ibCncl.setOnClickListener(this);
-
-        // открываем подключение к БД
         db = new DB(this);
         db.open();
 
@@ -60,9 +56,6 @@ public class AddEditTagActivity extends Activity implements View.OnClickListener
                         //db.delTag(id);
                     }
                 }
-                break;
-
-            case R.id.imgBtnCnclEdtTag:
                 break;
         }
 

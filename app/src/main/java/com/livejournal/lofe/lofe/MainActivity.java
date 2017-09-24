@@ -14,6 +14,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
@@ -61,6 +62,8 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
 
         Intent intent = getIntent();
         position = intent.getIntExtra("position", 0);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         getSupportLoaderManager().initLoader(0, null, this);
 

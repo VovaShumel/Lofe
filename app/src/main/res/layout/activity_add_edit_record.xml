@@ -6,6 +6,7 @@
 
     <FrameLayout
         android:orientation="horizontal"
+        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
@@ -30,23 +31,19 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:id="@+id/imgBtnOkEdtRecord"
-            android:background="@drawable/img_ok"
+            android:background="@drawable/inkwell"
             android:layout_gravity="bottom|right" />
 
     </FrameLayout>
 
     <EditText
+        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etRecordText" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text=""
-        android:id="@+id/tvADTDateTime" />
-
     <GridView
+        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:numColumns="3"
