@@ -49,14 +49,26 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
 
         registerForContextMenu(lvData);
 
+        final SwipeDetector swipeDetector = new SwipeDetector();
+        lvData.setOnTouchListener(swipeDetector);
+
         lvData.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
-                intent.putExtra("id", id);                         // id записи, которую необходимо отредактировать
-                //intent.putExtra("position", lvData.getFirstVisiblePosition());
-                intent.putExtra("position", position);
-                startActivity(intent);
+
+                if (swipeDetector.swipeDetected()) {                                // свайп?
+                    if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+                        // TODO тут нужно прописать удаление дела с анимацией и возможностью отменить, типа как в гмайл
+                    }else if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
+                        // TODO тут нужно сдвигать дело на завтра с анимацией
+                    }
+                } else {
+                    Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
+                    intent.putExtra("id", id);                         // id записи, которую необходимо отредактировать
+                    //intent.putExtra("position", lvData.getFirstVisiblePosition());
+                    intent.putExtra("position", position);
+                    startActivity(intent);
+                }
             }
         });
 
