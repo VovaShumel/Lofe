@@ -18,11 +18,13 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cursor> {
+public class MainActivity extends FragmentActivity implements View.OnClickListener,
+                                                                LoaderCallbacks<Cursor> {
 
     private static final int CM_EDIT_ID = 1;
     private static final int CM_DELETE_ID = 2;
@@ -31,11 +33,14 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
     long idd = 0;
     int position = 0;
     SimpleCursorAdapter scAdapter;
-    Button btn;
+    ImageButton ibFilter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ibFilter = (ImageButton) findViewById(R.id.imgFilter);
+        ibFilter.setOnClickListener(this);
 
         db = new DB(this);
         db.open();
@@ -101,10 +106,10 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
         }
     }
 
-    public void onButtonClick(View v) {
+    public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
-            case R.id.button:
+            case R.id.imgFilter:
                 intent = new Intent(this, ChooseTagsActivity.class);  // Будем передавать в экран AddEditRecord
                 startActivityForResult(intent, 1);
                 break;

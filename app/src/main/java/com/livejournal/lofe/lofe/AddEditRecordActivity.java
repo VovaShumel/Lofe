@@ -37,7 +37,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     private static final int CM_DELETE_ID = 2;
     EditText etRecordText;
     ImageButton ibOk;
-    ImageButton ibCncl;
     Button btnAddTag;
     GridView gvTags;
     TextView tvDate;

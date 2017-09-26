@@ -61,5 +61,17 @@
             android:layout_margin="10dp"
             android:text="@string/BtnNameOk"/>
 
+        <RadioButton
+            android:id="@+id/rbAnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="And" />
+
+        <RadioButton
+            android:id="@+id/rbOr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Or" />
+
     </RelativeLayout>
 </LinearLayout>
