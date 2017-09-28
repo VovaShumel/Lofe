@@ -26,10 +26,10 @@
                 android:text="" />
 
             <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:id="@+id/imgFilter"
-                android:background="@drawable/img_filter"
+                android:background="@drawable/img_filter2"
                 android:layout_alignParentRight="true" />
 
         </RelativeLayout>
@@ -49,6 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_add" />
+        android:background="@drawable/img_add2" />
 
 </android.support.design.widget.CoordinatorLayout>
