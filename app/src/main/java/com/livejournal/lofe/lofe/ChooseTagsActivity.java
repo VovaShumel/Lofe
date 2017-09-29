@@ -86,9 +86,9 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 ArrayList<Integer> chTaags = tagsAdapter.getCheckedTags();
                 intent = new Intent();
                 if (chTaags.size() > 0) {
-                    intent.putExtra("id", chTaags.get(0));
+                    intent.putExtra("tagId", chTaags.get(0));
                 } else {
-                    intent.putExtra("id", 0);
+                    intent.putExtra("tagId", 0);
                 }
                 setResult(RESULT_OK, intent);
                 finish();

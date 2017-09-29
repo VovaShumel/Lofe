@@ -30,7 +30,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final int CM_DELETE_ID = 2;
     public ListView lvData;
     DB db;
-    long idd = 0;
+    long tagId = 0;
     int position = 0;
     SimpleCursorAdapter scAdapter;
     ImageButton ibFilter;
@@ -71,8 +71,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class);  // Будем передавать в экран AddEditRecord
                     intent.putExtra("id", id);                         // id записи, которую необходимо отредактировать
                     //intent.putExtra("position", lvData.getFirstVisiblePosition());
+                    intent.putExtra("tagId", tagId);
                     intent.putExtra("position", position);
-                    startActivity(intent);
+                    //startActivity(intent);
+                    startActivityForResult(intent, 1);
                 }
             }
         });
@@ -85,13 +87,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         getSupportLoaderManager().initLoader(0, null, this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //fab.setImageResource(R.drawable.img_add2);
+        fab.setBackgroundResource(R.drawable.img_add2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class); // Будем передавать в экран AddEditRecord
                 intent.putExtra("id", 0);                                                   // код "0", сигнализурющий о том, что запись нужно
                                                                                             // не редактировать, а добавлять
-                startActivity(intent);
+                intent.putExtra("tagId", tagId);
+                //startActivity(intent);
+                startActivityForResult(intent, 1);
                 getSupportLoaderManager().getLoader(0).forceLoad();                         // получаем новый курсор с данными
             }
         });
@@ -119,7 +125,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
-        idd = data.getLongExtra("id", 0);
+        tagId = data.getLongExtra("tagId", 0);
         getSupportLoaderManager().restartLoader(0, null, this);
         getSupportLoaderManager().getLoader(0).forceLoad();
     }
@@ -161,7 +167,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, db, idd);
+        return new MyCursorLoader(this, db, tagId);
     }
 
     @Override

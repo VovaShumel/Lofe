@@ -40,7 +40,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     Button btnAddTag;
     GridView gvTags;
     TextView tvDate;
-    long id, ms;
+    long id, tagId, ms;
     int position;
     DB db;
 
@@ -53,6 +53,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
         Intent intent = getIntent();
         id = intent.getLongExtra("id", 0);
+        tagId = intent.getLongExtra("tagId", 0);
         position = intent.getIntExtra("position", 0);
 
         ibOk = (ImageButton) findViewById(R.id.imgBtnOkEdtRecord);
@@ -153,8 +154,11 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                 db.close();
                 Intent intent = new Intent(this, MainActivity.class);
                 //intent.putExtra("id", id);
+                intent.putExtra("tagId", tagId);
                 intent.putExtra("position", position);
-                startActivity(intent);
+                //startActivity(intent);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
 
             case R.id.btnAddTag:
