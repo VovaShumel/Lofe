@@ -1,5 +1,7 @@
 package com.livejournal.lofe.lofe;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static android.view.MotionEvent.ACTION_DOWN;
@@ -28,7 +32,10 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
     float x, y;
     TextView tvX, tvY;
     ImageView ivClock;
+    Button btSetAlarm;
     long PressTime = 0;
+    AlarmManager alarmManager;
+    PendingIntent pendingIntent;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +47,31 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
         ivClock = (ImageView) findViewById(R.id.iView);
         ivClock.setOnTouchListener(this);
 
-        CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
+        btSetAlarm = (Button) findViewById(R.id.buttonSetAlarm);
+
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        final CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
+
+        //final Calendar calendar = Calendar.getInstance();
+
+        final Intent my_intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+
+        btSetAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Time curTime = Calendar.getInstance().getTime();
+                //int hour = curTime.
+
+                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 10000, pendingIntent);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 10000, pendingIntent);
+            }
+        })
+        ;
+
+
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
             @Override

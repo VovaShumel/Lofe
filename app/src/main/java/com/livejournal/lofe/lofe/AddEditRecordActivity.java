@@ -132,7 +132,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
             case R.id.imgBtnOkEdtRecord:
                 String s = etRecordText.getText().toString();
-                if (s != null) { // TODO тут, вроде, надо проверять на на нулл, а на пустую строку
+                if (s != null) { // TODO тут, вроде, надо проверять не на нулл, а на пустую строку
                     if (id > 0) {
                         db.edtRecordText(s, id);
                     } else {
@@ -151,6 +151,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                         db.delRec(id);
                     }
                 }
+
                 db.close();
                 Intent intent = new Intent(this, MainActivity.class);
                 //intent.putExtra("id", id);

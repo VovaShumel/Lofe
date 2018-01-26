@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -15,8 +16,10 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,6 +37,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     int position = 0;
     SimpleCursorAdapter scAdapter;
     ImageButton ibFilter;
+    Parcelable state;
+    AutoCompleteTextView tvSearch;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         ibFilter = (ImageButton) findViewById(R.id.imgFilter);
         ibFilter.setOnClickListener(this);
+
+        tvSearch = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
 
         db = new DB(this);
         db.open();
@@ -107,7 +114,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onWindowFocusChanged(hasFocus);
 
         if (position > 0) {
-            lvData.smoothScrollToPositionFromTop(position, 0, 0);
+            //lvData.smoothScrollToPositionFromTop(position, 0, 0);
             position = 0;
         }
     }
@@ -120,6 +127,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 startActivityForResult(intent, 1);
                 break;
         }
+    }
+
+    @Override
+    public void onPause() {
+        state = lvData.onSaveInstanceState();
+        super.onPause();
     }
 
     @Override
@@ -173,6 +186,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         scAdapter.swapCursor(cursor);
+        if(state != null) {
+            lvData.onRestoreInstanceState(state);
+            //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(tvSearch.getWindowToken(), 0);
+        }
     }
 
     @Override
