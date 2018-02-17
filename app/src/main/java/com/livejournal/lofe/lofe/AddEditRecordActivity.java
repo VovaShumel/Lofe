@@ -178,7 +178,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         if (ms == 0)
             tvDate.setText(R.string.DATE_UNDEFINED);
         else
-            tvDate.setText(new SimpleDateFormat("dd.MM.yy hh:mm").format(new Date(ms)));
+            tvDate.setText(new SimpleDateFormat("dd.MM.yy HH:mm").format(new Date(ms)));
+            //tvDate.setText("" + ms);
     }
 
 

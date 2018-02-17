@@ -15,22 +15,18 @@
         android:id="@+id/textView2"
         android:layout_gravity="top|right"/>
 
-    <!--
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
--->
-    <ImageView
-        android:layout_width="720px"
-        android:layout_height="720px"
-        android:id="@+id/iView"
-        android:src="@drawable/clock_7"
-        android:layout_gravity="top" />
-
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom" />
+
+    <ImageView
+        android:id="@+id/iView"
+        android:layout_width="720px"
+        android:layout_height="720px"
+        android:layout_gravity="top"
+        android:src="@drawable/clock_7" />
 
     <Button
         android:id="@+id/buttonSetAlarm"

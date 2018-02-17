@@ -20,6 +20,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
@@ -36,6 +38,7 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
     long PressTime = 0;
     AlarmManager alarmManager;
     PendingIntent pendingIntent;
+    Long ms = null;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +71,7 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
                 //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 10000, pendingIntent);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 10000, pendingIntent);
             }
-        })
-        ;
-
+        });
 
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
 
@@ -79,17 +80,13 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
                                             int month, int dayOfMonth) {
 
                 SimpleDateFormat smf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                Long ms = null;
                 try {
-                    ms = smf.parse("" + dayOfMonth + "/" + month + "/" + year + " 07:00:00").getTime();
+                    ms = smf.parse("" + dayOfMonth + "/" + month + "/" + year + " 00:00:00").getTime();
+                    ms += TimeZone.getDefault().getRawOffset();
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-                Intent intent = new Intent().putExtra("ms", ms);
-
-                setResult(RESULT_OK, intent);
-                finish();
             }
         });
     }
@@ -147,6 +144,33 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
                     tvY.setText(h + ":" + m);
                     tvX.setText((System.currentTimeMillis() / 1000) + " ");
+
+                    if (ms == null) {
+                        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+
+                        int curH = calendar.get(Calendar.HOUR);
+                        int curM = calendar.get(Calendar.MINUTE);
+
+                        calendar.set(Calendar.HOUR, h);
+                        calendar.set(Calendar.MINUTE, m);
+
+                        if ((curH > h) || ((curH == h) && (curM > m)))
+                            calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+                        ms = calendar.getTimeInMillis();
+                    }
+                    else {
+                        try {
+                            SimpleDateFormat smf = new SimpleDateFormat("HH:mm");
+                            ms += smf.parse("" + h + ":" + m + "").getTime();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    Intent intent = new Intent().putExtra("ms", ms);
+                    setResult(RESULT_OK, intent);
+                    finish();
 
                     break;
             }
