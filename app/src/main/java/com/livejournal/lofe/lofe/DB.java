@@ -6,6 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import static android.os.Environment.*;
 import static com.livejournal.lofe.lofe.MyLog.d;
 
@@ -56,8 +60,27 @@ public class DB {
     }
 
     // получить все данные из таблицы DB_TABLE
-    public Cursor getAllData() {
-        return mDB.query(RECORD_TABLE, null, null, null, null, null, null);
+    public Cursor getAllData(long msStartTime) {
+        if (msStartTime == 0)
+            return mDB.query(RECORD_TABLE, null, null, null, null, null, null);
+        else {
+            GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance();
+            calendar.setTimeInMillis(msStartTime);
+            calendar.set(Calendar.HOUR, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+            msStartTime = calendar.getTimeInMillis();
+
+            MyLog.d("Загрузка за прошедшие сутки от " + msStartTime);
+
+            String query = "SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
+                    " FROM " + RECORD_TABLE +
+                    " WHERE " +
+                    RECORD_TABLE + "." + R_COLUMN_DATE + " < " + msStartTime +
+                    " OR " +
+                    RECORD_TABLE + "." + R_COLUMN_DATE + " IS NULL;";
+            return mDB.rawQuery(query, null);
+        }
     }
 
     // получить записи, которым назначены заданные ярлыки

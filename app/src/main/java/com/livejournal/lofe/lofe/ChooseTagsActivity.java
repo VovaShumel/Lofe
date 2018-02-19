@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 // Активити выбора ярлыков для сортировки по ярлыкам
 public class ChooseTagsActivity extends FragmentActivity implements View.OnClickListener,
@@ -32,7 +33,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     TextView tvDate;
     GridView gvTags;
     DB db;
-    long ms;
+    long msStartTime;   // Момент времени, с которого будем отображать ярлыки
 
     long[] idTags = {0};
 
@@ -42,7 +43,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.dialog_choose_tags);
+        setContentView(R.layout.activity_choose_tags);
 
         ibOk = (Button) findViewById(R.id.btnChooseTagsDialogOk);
         ibOk.setOnClickListener(this);
@@ -53,8 +54,13 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         ibAll = (Button) findViewById(R.id.btnChooseTagsDialogAll);
         ibAll.setOnClickListener(this);
 
-        tvDate = (TextView) findViewById(R.id.tvActChTagsDate);
+        tvDate = (TextView) findViewById(R.id.tvDate_aChooseTags);
         tvDate.setOnClickListener(this);
+
+        GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
+        //Date date = calendar.getTime();
+        msStartTime = calendar.getTimeInMillis();
+        tvDate.setText("" + new SimpleDateFormat("dd.MM.yy").format(new Date(msStartTime)));
 
         db = new DB(this);                                                                          // открываем подключение к БД
         db.open();
@@ -71,7 +77,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tvActChTagsDate:
+            case R.id.tvDate_aChooseTags:
                 //Toast.makeText(this, "На дату нажимается", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, AlarmActivity.class);
                 startActivityForResult(intent, 1);
@@ -90,6 +96,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 } else {
                     intent.putExtra("tagId", 0);
                 }
+                intent.putExtra("msStartTime", msStartTime);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
@@ -99,11 +106,11 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}         // TODO тут тоже соответственно упростить?
-        ms = data.getLongExtra("ms", 0);
-        if (ms == 0)
+        msStartTime = data.getLongExtra("ms", 0);
+        if (msStartTime == 0)
             tvDate.setText(R.string.DATE_UNDEFINED);
         else
-            tvDate.setText("Не раньше " + new SimpleDateFormat("dd.MM.yy").format(new Date(ms)));
+            tvDate.setText("" + new SimpleDateFormat("dd.MM.yy").format(new Date(msStartTime)));
     }
 
     @Override

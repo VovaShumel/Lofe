@@ -33,7 +33,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final int CM_DELETE_ID = 2;
     public ListView lvData;
     DB db;
-    long tagId = 0;
+    long tagId, msStartTime = 0;
     int position = 0;
     SimpleCursorAdapter scAdapter;
     ImageButton ibFilter;
@@ -139,6 +139,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
         tagId = data.getLongExtra("tagId", 0);
+        msStartTime = data.getLongExtra("msStartTime", 0);
         getSupportLoaderManager().restartLoader(0, null, this);
         getSupportLoaderManager().getLoader(0).forceLoad();
     }
@@ -180,7 +181,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, db, tagId);
+        return new MyCursorLoader(this, db, tagId, msStartTime);
     }
 
     @Override
@@ -201,19 +202,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     static private class MyCursorLoader extends CursorLoader {
 
         DB db;
-        long id;
+        long id, msStartTime;
 
-        private MyCursorLoader(Context context, DB db, long id) {
+        private MyCursorLoader(Context context, DB db, long id, long msStartTime) {
             super(context);
             this.db = db;
             this.id = id;
+            this.msStartTime = msStartTime;
         }
 
         @Override
         public Cursor loadInBackground() {
             Cursor cursor;
             if (id == 0)
-                cursor = db.getAllData();
+                cursor = db.getAllData(msStartTime);
             else {
                 cursor = db.getTagedRecord(id);
 

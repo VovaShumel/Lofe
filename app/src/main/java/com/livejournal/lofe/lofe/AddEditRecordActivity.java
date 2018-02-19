@@ -177,9 +177,10 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     void SetDateText(long ms) {
         if (ms == 0)
             tvDate.setText(R.string.DATE_UNDEFINED);
-        else
+        else {
             tvDate.setText(new SimpleDateFormat("dd.MM.yy HH:mm").format(new Date(ms)));
-            //tvDate.setText("" + ms);
+            MyLog.d("Тестируемый ярлык " + ms);
+        }
     }
 
 
