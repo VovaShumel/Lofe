@@ -81,9 +81,9 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
                 SimpleDateFormat smf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 try {
+                    month += 1;
                     ms = smf.parse("" + dayOfMonth + "/" + month + "/" + year + " 00:00:00").getTime();
                     ms += TimeZone.getDefault().getRawOffset();
-
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

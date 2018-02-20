@@ -22,7 +22,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        d("Будильник сработал");
 
         Intent notificationIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent contentIntent = PendingIntent.getBroadcast(context,

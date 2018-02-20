@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
 import static com.livejournal.lofe.lofe.R.color.colorInactive;
 
 public class AddEditRecordActivity extends FragmentActivity implements View.OnClickListener,
@@ -87,26 +88,20 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         gvTags = (GridView) findViewById(R.id.gvTags);
         gvTags.setAdapter(scAdapter);
 
-        MyLog.d("Зашли в ээ");
-
         gvTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 switch ((int)id) {                                                                  // TODO теоретически возможная ошибка
                     case 11:                                                                        // TODO что за? Пиши подробнее
-                        MyLog.d("Открыли будильник");
                         startActivity(new Intent(AddEditRecordActivity.this, AlarmActivity.class));
-                        MyLog.d("Закрыли будильник");
                         break;
                 }
 
                 long idRecord = AddEditRecordActivity.this.id;
-                MyLog.d("Кликнули по итему id = " + idRecord);
                 if (idRecord > 0) {
                     db.invertTag(idRecord, id);
                 } else {
                     AddEditRecordActivity.this.id = db.addRecordText(etRecordText.getText().toString());
-                    MyLog.d("Назначили ярлык" + db.assignTag(AddEditRecordActivity.this.id, id));
                 }
             }
         });
@@ -136,10 +131,12 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                     if (id > 0) {
                         db.edtRecordText(s, id);
                     } else {
-                        id = db.addRecordText(s);
+                        id = db.addRecordText(s);   // TODO потом слить в одну операцию
+                        db.edtRecordDate(id, getCurTimeMS());
                     }
 
-                    db.edtRecordDate(id, ms);
+                    if (ms != 0)
+                        db.edtRecordDate(id, ms);
 
                     ArrayList<ChTag> chTags = scAdapter.getChTags();
                     for(int i = 0; i < chTags.size(); i++) {
@@ -218,10 +215,9 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
         @Override
         public Cursor loadInBackground() {
-            Cursor cursor;
-            MyLog.d("ID записи, для которой задано посмотреть ярлыки = " + id);
-                cursor = db.getRecordTags(id);
-            return cursor;
+            //Cursor cursor;
+            //cursor = db.getRecordTags(id);
+            return db.getRecordTags(id);
         }
     }
 }

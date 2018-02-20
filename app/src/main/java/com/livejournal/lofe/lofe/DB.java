@@ -47,11 +47,9 @@ public class DB {
 
     // открыть подключение
     public void open() {
-        d(DB_PATH);
         mDBHelper = new DBHelper(mCtx, DB_PATH + DB_NAME, null, DB_VERSION);
         mDB = mDBHelper.getWritableDatabase();
         mDB.setForeignKeyConstraintsEnabled(true);
-        //MyLog.d("Открытие бд");
     }
 
     // закрыть подключение
@@ -202,10 +200,8 @@ public class DB {
         if (c.getCount() > 0) {
             mDB.delete(RECORD_TAG_TABLE, RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record + " AND " +
                                          RECORD_TAG_COLUMN_TAG_ID + " = " + id_tag, null);
-            d("Ярлык таки-удаляется");
         } else {
             assignTag(id_record, id_tag);
-            d("Назначение ярлыка таки-происходит");
         }
     }
 
@@ -229,7 +225,6 @@ public class DB {
         // создаем и заполняем БД
         @Override
         public void onCreate(SQLiteDatabase db) {
-            //MyLog.d("Создание бд");
             //db.execSQL("PRAGMA foreign_keys=ON;");
 //            db.execSQL(DB_CREATE);
 //
@@ -245,7 +240,6 @@ public class DB {
 //        public void onConfigured(SQLiteDatabase db) {
 //            //db.execSQL("PRAGMA foreign_keys=ON;");
 //            db.setForeignKeyConstraintsEnabled(true);
-//            MyLog.d("Установили форейн кей");
 //        }
 
         @Override

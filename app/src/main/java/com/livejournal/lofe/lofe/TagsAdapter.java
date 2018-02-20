@@ -74,8 +74,6 @@ public class TagsAdapter extends SimpleCursorAdapter {
     CompoundButton.OnCheckedChangeListener myCheckChangList = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView,
                                      boolean isChecked) {
-            MyLog.d("Сейчас бит чекед = " + chTags[(int)buttonView.getTag()].checked);
-
             chTags[(int)buttonView.getTag()].checked = isChecked;
         }
     };

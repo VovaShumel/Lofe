@@ -61,12 +61,8 @@ public class AddEditTagActivity extends Activity implements View.OnClickListener
 
         db.close();
 
-        Log.d("DEBUG", "Закрываем AddEditTag_Activity");
-
         Intent intent = new Intent(this, AddEditRecordActivity.class);
-        //intent.putExtra("id", id);
         intent.putExtra("id", 0);
         startActivity(intent);
-
     }
 }

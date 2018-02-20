@@ -31,7 +31,6 @@ public class Tags2Adapter extends TagsAdapter {
                 v.setTag(c.getPosition());
                 ((CheckBox) v).setChecked(chTags[c.getPosition()].checked);
 
-                MyLog.d("Отрисовка ярлыка " + c.getPosition() + chTags[c.getPosition()].checked);
                 return true;
             } else
                 return false;
@@ -49,7 +48,6 @@ public class Tags2Adapter extends TagsAdapter {
                                             c.getLong(c.getColumnIndex(DB.TAG_COLUMN_ID)));
                 chTags[i] = new ChTag(!c.isNull(c.getColumnIndex(DB.RECORD_TAG_COLUMN_RECORD_ID)),
                                       c.getLong(c.getColumnIndex(DB.TAG_COLUMN_ID)));
-                MyLog.d("Яррлык " + chTags[i].checked + " " + chTags[i].id);
                 c.moveToNext();
             }
         }
@@ -59,14 +57,9 @@ public class Tags2Adapter extends TagsAdapter {
     public ArrayList<ChTag> getChTags() {
         ArrayList result = new ArrayList<ChTag>();
         if (chTags != null) {
-            MyLog.d("Таг не равен нулю...");
             for (int i = 0; i < chTags.length; i++) {
-                MyLog.d("asdfgфывапр");
-                if (startChTags[i].checked != chTags[i].checked) {
-                    MyLog.d("Добавляем объект в коллекцию");
+                if (startChTags[i].checked != chTags[i].checked)
                     result.add(chTags[i]);
-                } else
-                    MyLog.d(chTags[i].checked + "");
             }
         }
         return result;
@@ -75,8 +68,6 @@ public class Tags2Adapter extends TagsAdapter {
     CompoundButton.OnCheckedChangeListener myCheckChangList = new CompoundButton.OnCheckedChangeListener() {
         public void onCheckedChanged(CompoundButton buttonView,
                                      boolean isChecked) {
-            MyLog.d("Сейчас бит чекед = " + chTags[(int)buttonView.getTag()].checked);
-
             chTags[(int)buttonView.getTag()].checked = isChecked;
         }
     };
