@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import static com.livejournal.lofe.lofe.MyLog.d;
+
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
                                                                 LoaderCallbacks<Cursor> {
 
@@ -69,9 +71,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                     int position, long id) {
 
                 if (swipeDetector.swipeDetected()) {                                // свайп?
-                    if (swipeDetector.getAction() == SwipeDetector.Action.RL) {
+                    SwipeDetector.SwipeAction swipeAction = swipeDetector.getAction();
+
+                    if (swipeAction.action == SwipeDetector.Action.RL) {
+                        d("" + swipeAction.velocityX);
                         // TODO тут нужно прописать удаление дела с анимацией и возможностью отменить, типа как в гмайл
-                    }else if (swipeDetector.getAction() == SwipeDetector.Action.LR) {
+                    }else if (swipeAction.action == SwipeDetector.Action.LR) {
+                        d("" + swipeAction.velocityX);
                         // TODO тут нужно сдвигать дело на завтра с анимацией
                     }
                 } else {
