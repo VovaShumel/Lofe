@@ -4,10 +4,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class MyUtil {
+class MyUtil {
 
     // Возвращает текущее время в мс
-    public static long getCurTimeMS() {
+    static long getCurTimeMS() {
         return GregorianCalendar.getInstance().getTimeInMillis();
     }
 }
