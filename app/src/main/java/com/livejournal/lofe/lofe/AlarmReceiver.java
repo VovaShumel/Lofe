@@ -1,5 +1,7 @@
 package com.livejournal.lofe.lofe;
 
+import android.app.Activity;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,11 +12,8 @@ import android.content.res.Resources;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import static android.content.Context.KEYGUARD_SERVICE;
 import static com.livejournal.lofe.lofe.MyLog.d;
-
-/**
- * Created by User on 26.01.2018.
- */
 
 public class AlarmReceiver extends BroadcastReceiver {
 
@@ -40,10 +39,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(NOTIFY_ID, builder.build());
+
+        Intent _intent = new Intent(context, AlarmTriggeredActivity.class);
+        _intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.getApplicationContext().startActivity(_intent);
     }
-
-
-
-
-
 }

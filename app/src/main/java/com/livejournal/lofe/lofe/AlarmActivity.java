@@ -26,9 +26,6 @@ import java.util.TimeZone;
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
 
-/**
- * Created by User on 26.03.2016.
- */
 public class AlarmActivity extends FragmentActivity implements View.OnTouchListener {
 
     float x, y;
@@ -67,6 +64,7 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
                 //int hour = curTime.
 
                 pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
 
                 //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 10000, pendingIntent);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 10000, pendingIntent);

@@ -90,18 +90,18 @@ public class SwipeDetector implements View.OnTouchListener {
                         return true;
                     }
                 } else if (Math.abs(deltaY) > VERTICAL_MIN_DISTANCE) {  // Вертикальный свайп?
-
-                    if (deltaY < 0) {                                   // Сверху вниз?
-                        //mSwipeDetected = Action.TB;
-                        swipeAction.action = Action.TB;
-                        return false;
-                    }
-
-                    if (deltaY > 0) {                                   // Снизу вверх?
-                        //mSwipeDetected = Action.BT;
-                        swipeAction.action = Action.BT;
-                        return false;
-                    }
+                    return false;
+//                    if (deltaY < 0) {                                   // Сверху вниз?
+//                        //mSwipeDetected = Action.TB;
+//                        swipeAction.action = Action.TB;
+//                        return false;
+//                    }
+//
+//                    if (deltaY > 0) {                                   // Снизу вверх?
+//                        //mSwipeDetected = Action.BT;
+//                        swipeAction.action = Action.BT;
+//                        return false;
+//                    }
                 }
                 return true;
             }
