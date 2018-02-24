@@ -53,17 +53,15 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
         final CalendarView calendarView = (CalendarView) findViewById(R.id.calendarView);
 
-        //final Calendar calendar = Calendar.getInstance();
-
-        final Intent my_intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-
         btSetAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Time curTime = Calendar.getInstance().getTime();
-                //int hour = curTime.
 
-                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, my_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                //final Intent my_intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+                // intent.putExtra("id", 0); // TODO положить здесь id записи, для которой будильник
+
+                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
                 //alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 10000, pendingIntent);
