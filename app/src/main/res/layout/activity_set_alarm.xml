@@ -35,4 +35,19 @@
         android:layout_gravity="bottom"
         android:text="Button" />
 
+    <CheckBox
+        android:id="@+id/cbSetNotification_aSetAlarm"
+        android:layout_gravity="bottom|center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/Notification" />
+
+    <CheckBox
+        android:id="@+id/cbSetAlarm_aSetAlarm"
+        android:layout_gravity="bottom|right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Alarm" />
+
 </FrameLayout>

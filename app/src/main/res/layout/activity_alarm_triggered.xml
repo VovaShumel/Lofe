@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -7,6 +7,45 @@
         android:id="@+id/textView3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:text="@string/EventText" />
-</LinearLayout>
+
+    <Button
+        android:id="@+id/bDone_aAlarmTriggered"
+        android:layout_toLeftOf="@id/bPlus5m_aAlarmTriggered"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Done" />
+
+    <Button
+        android:id="@+id/bPlus5m_aAlarmTriggered"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Plus5m" />
+
+    <Button
+        android:id="@+id/bPlusHour_aAlarmTriggered"
+        android:layout_toRightOf="@id/bPlus5m_aAlarmTriggered"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/PlusHour" />
+
+    <Button
+        android:id="@+id/bForTomorrow_aAlarmTriggered"
+        android:layout_marginLeft="100dp"
+        android:layout_below="@id/bPlus5m_aAlarmTriggered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ForTomorrow" />
+
+    <Button
+        android:id="@+id/bForNewTime_aAlarmTriggered"
+        android:layout_below="@id/bPlusHour_aAlarmTriggered"
+        android:layout_toRightOf="@id/bForTomorrow_aAlarmTriggered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ForNewTime" />
+
+</RelativeLayout>
