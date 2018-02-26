@@ -35,7 +35,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final int CM_DELETE_ID = 2;
     public ListView lvData;
     DB db;
-    long tagId, msStartTime = 0;
+    long tagId = 0;
+    long msStartTime = MyUtil.getCurTimeMS();
     int position = 0;
     SimpleCursorAdapter scAdapter;
     ImageButton ibFilter;
@@ -51,8 +52,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         tvSearch = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
 
-        db = new DB(this);
+        db = new DB(this);  // TODO вроде бы это можно перенести непосредственно в работу с курсором
         db.open();
+
+        //db.AddColumn();
+        //db.GetColumnNames();
 
         String[] from = new String[] { DB.R_COLUMN_TEXT };
         int[] to = new int[] {R.id.tv__item_record__recordText};
@@ -146,6 +150,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (data == null) {return;}
         tagId = data.getLongExtra("tagId", 0);
         msStartTime = data.getLongExtra("msStartTime", 0);
+        MyUtil.log("При возвращении из сортировки ярлыков получили " + msStartTime + " мс");
         getSupportLoaderManager().restartLoader(0, null, this);
         getSupportLoaderManager().getLoader(0).forceLoad();
     }

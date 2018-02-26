@@ -144,10 +144,10 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
                     if (ms == null) {
                         GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
 
-                        int curH = calendar.get(Calendar.HOUR);
+                        int curH = calendar.get(Calendar.HOUR_OF_DAY);
                         int curM = calendar.get(Calendar.MINUTE);
 
-                        calendar.set(Calendar.HOUR, h);
+                        calendar.set(Calendar.HOUR_OF_DAY, h);
                         calendar.set(Calendar.MINUTE, m);
 
                         if ((curH > h) || ((curH == h) && (curM > m)))

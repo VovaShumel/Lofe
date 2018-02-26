@@ -10,7 +10,7 @@
     <string name="BtnNameAll">Все</string>
     <string name="BtnNameOk">Ok</string>
 
-    <string name="DATE_UNDEFINED">Без срока</string>
+    <string name="DATE_UNDEFINED">Без времени</string>
 
     <string name="EventText">Событие</string>
     <string name="Alarm">Будильник</string>

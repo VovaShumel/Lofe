@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -32,6 +33,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     Button ibOk, ibNone, ibAll;
     TextView tvDate;
     GridView gvTags;
+    CheckBox cbApplyTime;
     DB db;
     long msStartTime;   // Момент времени, с которого будем отображать ярлыки
 
@@ -44,6 +46,8 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_tags);
+
+        cbApplyTime = (CheckBox) findViewById(R.id.cbApplyTime_aChooseTags);
 
         ibOk = (Button) findViewById(R.id.btnChooseTagsDialogOk);
         ibOk.setOnClickListener(this);
@@ -96,7 +100,12 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 } else {
                     intent.putExtra("tagId", 0);
                 }
-                intent.putExtra("msStartTime", msStartTime);
+
+                if (cbApplyTime.isChecked())                            // Ярлыки отображать с учётом времени?
+                    intent.putExtra("msStartTime", msStartTime);
+                else
+                    intent.putExtra("msStartTime", 0);
+
                 setResult(RESULT_OK, intent);
                 finish();
                 break;

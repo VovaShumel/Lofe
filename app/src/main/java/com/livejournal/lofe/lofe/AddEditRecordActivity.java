@@ -41,7 +41,9 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     Button btnAddTag;
     GridView gvTags;
     TextView tvDate;
-    long id, tagId, ms;
+    long id, tagId;
+    //long ms = MyUtil.getCurTimeMS();
+    long ms;
     int position;
     DB db;
 
@@ -64,6 +66,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         btnAddTag.setOnClickListener(this);
 
         tvDate = (TextView) findViewById(R.id.tvDate);
+        //tvDate.setText("" + ms);
         tvDate.setOnClickListener(this);
 
         db = new DB(this);                                                                          // открываем подключение к БД
@@ -78,7 +81,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
             SetDateText(db.getRecordDate(id));
         } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
             //tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
-            //tvDateTime.setText("Время и дата не заданы");
+            SetDateText(MyUtil.getCurTimeMS());
         }
 
         String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };                      // формируем столбцы сопоставления

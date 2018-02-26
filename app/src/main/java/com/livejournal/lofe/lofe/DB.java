@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static android.os.Environment.*;
@@ -20,7 +22,7 @@ public class DB {
     private static final int DB_VERSION = 1;
     private static final String RECORD_TABLE = "RECORD";
 
-    public static final String R_COLUMN_ID = "_id";
+    private static final String R_COLUMN_ID = "_id";
     public static final String R_COLUMN_TEXT = "text";
     public static final String R_COLUMN_DATE = "alarm_date";
 
@@ -57,6 +59,21 @@ public class DB {
         if (mDBHelper!=null) mDBHelper.close();
     }
 
+    public void AddColumn() {
+        String upgradeQuery = "ALTER TABLE RECORD ADD COLUMN alarm_enabled NUMERIC;";
+            mDB.execSQL(upgradeQuery);
+    }
+
+    public void GetColumnNames() {
+        Cursor c = mDB.rawQuery("PRAGMA table_info(" + RECORD_TABLE + ")", null);
+        if (c.moveToFirst()) {
+            do {
+                MyUtil.log("name: " + c.getString(1) + " type: " + c.getString(2));
+            } while (c.moveToNext());
+        }
+        c.close();
+    }
+
     // получить все данные из таблицы DB_TABLE
     public Cursor getAllData(long msStartTime) {
         if (msStartTime == 0)
@@ -64,12 +81,16 @@ public class DB {
         else {
             GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance();
             calendar.setTimeInMillis(msStartTime);
-            calendar.set(Calendar.HOUR, 0);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.add(Calendar.DAY_OF_YEAR, 1);
             msStartTime = calendar.getTimeInMillis();
 
+
+            MyUtil.log("{");
             MyLog.d("Загрузка за прошедшие сутки от " + msStartTime);
+            MyUtil.log(new SimpleDateFormat("dd.MM.yy HH:mm").format(new Date(msStartTime)));
+            MyUtil.log("}");
 
             String query = "SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
                     " FROM " + RECORD_TABLE +
@@ -113,6 +134,7 @@ public class DB {
                 s = c.getString(0);
             }
         }
+        // TODO тут вроде бы надо освободить курсор
         return s;
     }
 
@@ -126,6 +148,7 @@ public class DB {
                 l = c.getLong(0);
             }
         }
+        //TODO тут вроде бы нужно освободить курсор
         return l;
     }
 
@@ -203,6 +226,7 @@ public class DB {
         } else {
             assignTag(id_record, id_tag);
         }
+        // TODO тут вроде бы нужно освободить курсор
     }
 
     // Назначение ярлыка
@@ -211,7 +235,6 @@ public class DB {
         cv.put(RECORD_TAG_COLUMN_RECORD_ID, id_record);
         cv.put(RECORD_TAG_COLUMN_TAG_ID, id_tag);
         return mDB.insert(RECORD_TAG_TABLE, null, cv);
-
     }
 
     // класс по созданию и управлению БД
