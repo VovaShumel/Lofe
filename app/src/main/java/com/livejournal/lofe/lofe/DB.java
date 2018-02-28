@@ -31,7 +31,6 @@ public class DB {
     public static final String TAG_COLUMN_NAME = "name";
 
     private static final String RECORD_TAG_TABLE = "RECORD_TAG";
-    public static final String RECORD_TAG_COLUMN_ID = "_id";
     public static final String RECORD_TAG_COLUMN_RECORD_ID = "record_id";
     public static final String RECORD_TAG_COLUMN_TAG_ID = "tag_id";
 
@@ -72,6 +71,20 @@ public class DB {
             } while (c.moveToNext());
         }
         c.close();
+    }
+
+    public void GetTagTable() {
+        Cursor c = mDB.query(TAG_TABLE, null, null, null, null, null, null);
+        if (c.moveToFirst()) {
+            do {
+                MyUtil.log(c.getString(0) + " " + c.getString(1));
+            } while (c.moveToNext());
+        }
+        c.close();
+    }
+
+    void DeleteTag(long id) {
+        mDB.delete(TAG_TABLE, TAG_COLUMN_ID + " = " + id, null);
     }
 
     // получить все данные из таблицы DB_TABLE

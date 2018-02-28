@@ -57,6 +57,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         //db.AddColumn();
         //db.GetColumnNames();
+        //db.DeleteTag("Дата и время");
+        //db.DeleteTag(15);
+        //db.GetTagTable();
 
         String[] from = new String[] { DB.R_COLUMN_TEXT };
         int[] to = new int[] {R.id.tv__item_record__recordText};
