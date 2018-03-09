@@ -11,6 +11,8 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuItem;
@@ -51,6 +53,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         ibFilter.setOnClickListener(this);
 
         tvSearch = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        tvSearch.addTextChangedListener(new TextWatcher(){
+            @Override
+            public void afterTextChanged(Editable s) {
+                String str = s.toString();
+                if (str.length() >= 3)
+                    db.GetWithSubstr(str);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
 
         db = new DB(this);  // TODO вроде бы это можно перенести непосредственно в работу с курсором
         db.open();
