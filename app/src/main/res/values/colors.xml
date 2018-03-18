@@ -6,4 +6,5 @@
     <color name="colorInactive">#CCCCCC</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorLightGreen">#EEFFEE</color>
 </resources>
