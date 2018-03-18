@@ -37,7 +37,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final int CM_DELETE_ID = 2;
     public ListView lvData;
     DB db;
-    long tagId = 0;
+    long tagId = 0L;
     long msStartTime = MyUtil.getCurTimeMS();
     int position = 0;
     SimpleCursorAdapter scAdapter;
@@ -131,7 +131,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class); // Будем передавать в экран AddEditRecord
-                intent.putExtra("id", 0);                                                   // код "0", сигнализурющий о том, что запись нужно
+                intent.putExtra("id", 0L);                                                   // код "0", сигнализурющий о том, что запись нужно
                                                                                             // не редактировать, а добавлять
                 intent.putExtra("tagId", tagId);
                 //startActivity(intent);

@@ -42,7 +42,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     GridView gvTags;
     TextView tvDate;
     long id, tagId;
-    //long ms = MyUtil.getCurTimeMS();
     long ms;
     int position;
     DB db;
@@ -55,8 +54,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         setContentView(R.layout.activity_add_edit_record);
 
         Intent intent = getIntent();
-        id = intent.getLongExtra("id", 0);
-        tagId = intent.getLongExtra("tagId", 0);
+        id = intent.getLongExtra("id", 0L);
+        tagId = intent.getLongExtra("tagId", 0L);
         position = intent.getIntExtra("position", 0);
 
         ibOk = (ImageButton) findViewById(R.id.imgBtnOkEdtRecord);
@@ -130,7 +129,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
             case R.id.imgBtnOkEdtRecord:
                 String s = etRecordText.getText().toString();
-                if (s != null) { // TODO тут, вроде, надо проверять не на нулл, а на пустую строку
+                if (s != null) { // TODO тут надо проверять не на нулл, а на пустую строку
                     if (id > 0) {
                         db.edtRecordText(s, id);
                     } else {
@@ -210,7 +209,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         DB db;
         long id;
 
-        public MyCursorLoader(Context context, DB db, long id) {
+        MyCursorLoader(Context context, DB db, long id) {
             super(context);
             this.db = db;
             this.id = id;
