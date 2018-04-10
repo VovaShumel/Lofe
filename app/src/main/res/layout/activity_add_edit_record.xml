@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:weightSum="1">
 
     <FrameLayout
@@ -13,6 +14,7 @@
 
         <TextView
             android:id="@+id/tvDate"
+            android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_width="120dp"
@@ -28,16 +30,22 @@
             android:layout_gravity="center" />
 
         <ImageButton
+            android:contentDescription="@string/strDescr_ApplyRecordEditBtnImg"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:id="@+id/imgBtnOkEdtRecord"
             android:background="@drawable/inkwell"
-            android:layout_gravity="bottom|right" />
+            android:layout_gravity="bottom|end" />
 
     </FrameLayout>
 
     <EditText
         android:background="@color/colorWhite"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:hint="@string/spaceStr"
+        android:inputType="text"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/etRecordText" />

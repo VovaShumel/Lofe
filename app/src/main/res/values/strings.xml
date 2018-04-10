@@ -1,4 +1,6 @@
 <resources>
+    <string name="spaceStr"> </string>
+
     <string name="app_name">Lofe</string>
     <string name="add_record">Добавить</string>
     <string name="edit_record">Редактировать</string>
@@ -21,4 +23,6 @@
     <string name="PlusHour">+час</string>
     <string name="ForTomorrow">На завтра</string>
     <string name="ForNewTime">На новое время</string>
+
+    <string name="strDescr_ApplyRecordEditBtnImg">Image button apply edit record</string>
 </resources>

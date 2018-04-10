@@ -65,7 +65,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         btnAddTag.setOnClickListener(this);
 
         tvDate = (TextView) findViewById(R.id.tvDate);
-        //tvDate.setText("" + ms);
         tvDate.setOnClickListener(this);
 
         db = new DB(this);                                                                          // открываем подключение к БД
@@ -153,10 +152,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
                 db.close();
                 Intent intent = new Intent(this, MainActivity.class);
-                //intent.putExtra("id", id);
                 intent.putExtra("tagId", tagId);
                 intent.putExtra("position", position);
-                //startActivity(intent);
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
@@ -181,7 +178,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
             MyLog.d("Тестируемый ярлык " + ms);
         }
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -217,8 +213,6 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
         @Override
         public Cursor loadInBackground() {
-            //Cursor cursor;
-            //cursor = db.getRecordTags(id);
             return db.getRecordTags(id);
         }
     }
