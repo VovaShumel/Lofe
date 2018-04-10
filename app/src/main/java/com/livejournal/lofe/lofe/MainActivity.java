@@ -44,10 +44,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     ImageButton ibFilter;
     Parcelable state;
     AutoCompleteTextView tvSearch;
+    HTTPD httpd;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        httpd = new HTTPD();
 
         ibFilter = (ImageButton) findViewById(R.id.imgFilter);
         ibFilter.setOnClickListener(this);
@@ -209,6 +212,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onDestroy() {
         super.onDestroy();
         db.close();
+        httpd.destroy();
     }
 
     @Override
