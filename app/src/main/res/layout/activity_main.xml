@@ -24,14 +24,17 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:text="те" />
+                android:text=""
+                android:hint="..."/>
 
             <ImageButton
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:id="@+id/imgFilter"
                 android:background="@drawable/img_filter2"
-                android:layout_alignParentRight="true" />
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/strDescr_ToSortMenuBtnImg"/>
 
         </RelativeLayout>
 

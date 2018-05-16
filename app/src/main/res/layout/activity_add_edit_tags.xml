@@ -15,8 +15,9 @@
             android:id="@+id/imgBtnOkEdtTag"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_gravity="bottom|right"
-            android:background="@drawable/img_ok" />
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/img_ok"
+            android:contentDescription="@string/strDescr_TagCreateBtnImg"/>
 
     </FrameLayout>
 
@@ -24,6 +25,8 @@
         android:id="@+id/etTagName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/hintText_setTag"
         android:layout_gravity="center|top" />
 
 </LinearLayout>

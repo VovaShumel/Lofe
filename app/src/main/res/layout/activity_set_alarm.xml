@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/textView2"
-        android:layout_gravity="top|right"/>
+        android:layout_gravity="top|end"/>
 
     <CalendarView
         android:id="@+id/calendarView"
@@ -24,6 +24,7 @@
     <ImageView
         android:id="@+id/iView"
         android:layout_width="720px"
+        android:contentDescription="@string/strDescr_ClockFace"
         android:layout_height="720px"
         android:layout_gravity="top"
         android:src="@drawable/clock_7" />
@@ -33,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="Button" />
+        android:text="@string/btnName_test" />
 
     <CheckBox
         android:id="@+id/cbSetNotification_aSetAlarm"
@@ -45,7 +46,7 @@
 
     <CheckBox
         android:id="@+id/cbSetAlarm_aSetAlarm"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Alarm" />

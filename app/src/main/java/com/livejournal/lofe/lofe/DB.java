@@ -24,7 +24,9 @@ public class DB {
 
     private static final String R_COLUMN_ID = "_id";
     public static final String R_COLUMN_TEXT = "text";
-    public static final String R_COLUMN_DATE = "alarm_date";
+    private static final String R_COLUMN_DATE = "alarm_date";
+    // PRECEDENT_ACTION
+    // NEXT_ACTION
 
     private static final String TAG_TABLE = "TAG";
     public static final String TAG_COLUMN_ID = "_id";
@@ -32,7 +34,7 @@ public class DB {
 
     private static final String RECORD_TAG_TABLE = "RECORD_TAG";
     public static final String RECORD_TAG_COLUMN_RECORD_ID = "record_id";
-    public static final String RECORD_TAG_COLUMN_TAG_ID = "tag_id";
+    private static final String RECORD_TAG_COLUMN_TAG_ID = "tag_id";
 
     private final Context mCtx;
 
@@ -42,7 +44,7 @@ public class DB {
     private String[] columns = null;
     private String[] selectionArgs = null;
 
-    public DB(Context ctx) {
+    DB(Context ctx) {
         mCtx = ctx;
     }
 
@@ -58,9 +60,9 @@ public class DB {
         if (mDBHelper!=null) mDBHelper.close();
     }
 
-    public void AddColumn() {
-        String upgradeQuery = "ALTER TABLE RECORD ADD COLUMN alarm_enabled NUMERIC;";
-            mDB.execSQL(upgradeQuery);
+    public void AddColumn(String tableName, String newColumnName) {
+        String upgradeQuery = "ALTER TABLE " + tableName + " ADD COLUMN " + newColumnName + " NUMERIC;";
+        mDB.execSQL(upgradeQuery);
     }
 
     public void GetColumnNames() {
@@ -157,8 +159,8 @@ public class DB {
             if (c.moveToFirst()) {
                 s = c.getString(0);
             }
+            c.close();
         }
-        // TODO тут вроде бы надо освободить курсор
         return s;
     }
 
@@ -171,8 +173,8 @@ public class DB {
             if (c.moveToFirst()) {
                 l = c.getLong(0);
             }
+            c.close();
         }
-        //TODO тут вроде бы нужно освободить курсор
         return l;
     }
 
@@ -250,11 +252,11 @@ public class DB {
         } else {
             assignTag(id_record, id_tag);
         }
-        // TODO тут вроде бы нужно освободить курсор
+        c.close();
     }
 
     // Назначение ярлыка
-    public long assignTag(long id_record, long id_tag) {
+    private long assignTag(long id_record, long id_tag) {
         ContentValues cv = new ContentValues();
         cv.put(RECORD_TAG_COLUMN_RECORD_ID, id_record);
         cv.put(RECORD_TAG_COLUMN_TAG_ID, id_tag);
@@ -264,7 +266,7 @@ public class DB {
     // класс по созданию и управлению БД
     private class DBHelper extends SQLiteOpenHelper {
 
-        public DBHelper(Context context, String name, CursorFactory factory,
+        DBHelper(Context context, String name, CursorFactory factory,
                         int version) {
             super(context, name, factory, version);
         }

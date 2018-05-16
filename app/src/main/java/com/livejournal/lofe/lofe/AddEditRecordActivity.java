@@ -154,8 +154,9 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("tagId", tagId);
                 intent.putExtra("position", position);
-                setResult(RESULT_OK, intent);
-                finish();
+                startActivity(intent);
+                //setResult(RESULT_OK, intent);
+                //finish();
                 break;
 
             case R.id.btnAddTag:

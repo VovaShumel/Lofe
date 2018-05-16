@@ -38,7 +38,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public ListView lvData;
     DB db;
     long tagId = 0L;
-    long msStartTime = MyUtil.getCurTimeMS();
+    long msStartTime;
     int position = 0;
     SimpleCursorAdapter scAdapter;
     ImageButton ibFilter;
@@ -49,6 +49,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        msStartTime = MyUtil.getCurTimeMS();
 
         httpd = new HTTPD();
 
@@ -76,7 +78,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         db = new DB(this);  // TODO вроде бы это можно перенести непосредственно в работу с курсором
         db.open();
 
-        //db.AddColumn();
+        //db.AddColumn("RECORD", "PRECEDENT_ACTION");
+        //db.AddColumn("RECORD", "NEXT_ACTION");
+
         //db.GetColumnNames();
         //db.DeleteTag("Дата и время");
         //db.DeleteTag(15);
@@ -114,8 +118,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     //intent.putExtra("position", lvData.getFirstVisiblePosition());
                     intent.putExtra("tagId", tagId);
                     intent.putExtra("position", position);
-                    //startActivity(intent);
-                    startActivityForResult(intent, 1);
+                    startActivity(intent);
+                    //startActivityForResult(intent, 1);
                 }
             }
         });
@@ -136,9 +140,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 Intent intent = new Intent(MainActivity.this, AddEditRecordActivity.class); // Будем передавать в экран AddEditRecord
                 intent.putExtra("id", 0L);                                                   // код "0", сигнализурющий о том, что запись нужно
                                                                                             // не редактировать, а добавлять
-                intent.putExtra("tagId", tagId);
-                //startActivity(intent);
-                startActivityForResult(intent, 1);
+                //intent.putExtra("tagId", tagId);
+                startActivity(intent);
+                //startActivityForResult(intent, 1);
                 getSupportLoaderManager().getLoader(0).forceLoad();                         // получаем новый курсор с данными
             }
         });
@@ -167,6 +171,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onPause() {
         state = lvData.onSaveInstanceState();
         super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        msStartTime = MyUtil.getCurTimeMS();
+        super.onResume();
     }
 
     @Override

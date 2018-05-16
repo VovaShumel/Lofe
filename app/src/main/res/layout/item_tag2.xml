@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@+id/ivTag2Img"
-        android:contentDescription=""
+        android:contentDescription="@string/strDescr_TagImg"
         android:layout_width="match_parent"
         android:layout_height="80dp" />
 
@@ -13,8 +13,8 @@
         android:id="@+id/tvTag2Text"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:layout_alignTop="@+id/tvTagChecked"
-        android:layout_toLeftOf="@+id/tvTagChecked"
+        android:layout_alignTop="@+id/cbTag2Checked"
+        android:layout_toLeftOf="@+id/cbTag2Checked"
         android:textColor="@color/colorBlack"
         android:textSize="8sp" />
 
@@ -25,7 +25,7 @@
         android:layout_height="20dp"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
-        android:layout_below="@+id/ivTagImg" />
+        android:layout_below="@+id/ivTag2Img" />
 
 
 </RelativeLayout>

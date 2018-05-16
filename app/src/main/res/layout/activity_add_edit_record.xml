@@ -43,6 +43,8 @@
         android:background="@color/colorWhite"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
         android:hint="@string/spaceStr"
         android:inputType="textMultiLine"
         android:layout_marginBottom="10dp"
