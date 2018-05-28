@@ -11,6 +11,7 @@
     <string name="BtnNameNone">None</string>
     <string name="BtnNameAll">Все</string>
     <string name="BtnNameOk">Ok</string>
+    <string name="BtnNameOrderByDate">По дате</string>
 
     <string name="DATE_UNDEFINED">Без времени</string>
 

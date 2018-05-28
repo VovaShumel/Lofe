@@ -182,11 +182,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
-        tagId = data.getLongExtra("tagId", 0);
-        msStartTime = data.getLongExtra("msStartTime", 0);
-        MyUtil.log("При возвращении из сортировки ярлыков получили " + msStartTime + " мс");
-        getSupportLoaderManager().restartLoader(0, null, this);
-        getSupportLoaderManager().getLoader(0).forceLoad();
+
+        RecordsSortParams sortParams = (RecordsSortParams) getIntent().getParcelableExtra(
+                                            RecordsSortParams.class.getCanonicalName());
+        if (sortParams != null) {
+            //if (sortParams.sortByIncTime)
+
+
+        } else {
+            tagId = data.getLongExtra("tagId", 0);
+            msStartTime = data.getLongExtra("msStartTime", 0);
+            MyUtil.log("При возвращении из сортировки ярлыков получили " + msStartTime + " мс");
+            getSupportLoaderManager().restartLoader(0, null, this);
+            getSupportLoaderManager().getLoader(0).forceLoad();
+        }
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,

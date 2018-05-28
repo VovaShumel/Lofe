@@ -27,10 +27,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+// TODO эту активити и соотв слой переименовать, сортировка не только по ярлыкам
+
 // Активити выбора ярлыков для сортировки по ярлыкам
 public class ChooseTagsActivity extends FragmentActivity implements View.OnClickListener,
                                                         LoaderCallbacks<Cursor> {
-    Button ibOk, ibNone, ibAll;
+    Button ibOk, ibNone, ibAll, bByDate;
     TextView tvDate;
     GridView gvTags;
     CheckBox cbApplyTime;
@@ -57,6 +59,9 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
 
         ibAll = (Button) findViewById(R.id.btnChooseTagsDialogAll);
         ibAll.setOnClickListener(this);
+
+        bByDate = (Button) findViewById(R.id.btnChooseTagsDialogOrderByDate);
+        bByDate.setOnClickListener(this);
 
         tvDate = (TextView) findViewById(R.id.tvDate_aChooseTags);
         tvDate.setOnClickListener(this);
@@ -91,6 +96,18 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
             case R.id.btnChooseTagsDialogAll:
                 tagsAdapter.setAllTags();
                 break;
+            case R.id.btnChooseTagsDialogOrderByDate:
+                db.close();
+                RecordsSortParams sortParams = new RecordsSortParams(true); // TODO задефайнить
+                //sortParams.sortByIncTime = true;
+                intent = new Intent(this, ChooseTagsActivity.class);
+                intent.putExtra(RecordsSortParams.class.getCanonicalName(), sortParams);
+                //intent = new Intent();
+                //intent.p
+                setResult(RESULT_OK, intent);
+                finish();
+                break;
+
             case R.id.btnChooseTagsDialogOk:
                 db.close();
                 ArrayList<Integer> chTaags = tagsAdapter.getCheckedTags();

@@ -22,25 +22,25 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="84dp"
         android:layout_weight="1">
 
         <Button
             android:id="@+id/btnChooseTagsDialogNone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/BtnNameNone"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true" />
+            android:text="@string/BtnNameNone" />
 
         <Button
             android:id="@+id/btnChooseTagsDialogAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:text="@string/BtnNameAll"
             android:layout_toLeftOf="@+id/btnChooseTagsDialogOk"
-            android:layout_toRightOf="@+id/btnChooseTagsDialogNone"/>
+            android:layout_toRightOf="@+id/btnChooseTagsDialogNone"
+            android:text="@string/BtnNameAll" />
 
         <Button
             android:id="@+id/btnChooseTagsDialogOk"
@@ -48,7 +48,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_margin="10dp"
-            android:text="@string/BtnNameOk"/>
+            android:text="@string/BtnNameOk" />
+
+        <Button
+            android:id="@+id/btnChooseTagsDialogOrderByDate"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cbApplyTime_aChooseTags"
+            android:layout_alignStart="@+id/btnChooseTagsDialogOk"
+            android:layout_alignLeft="@+id/btnChooseTagsDialogOk"
+            android:layout_marginStart="-60dp"
+            android:layout_marginLeft="-60dp"
+            android:text="@string/BtnNameOk" />
 
         <RadioButton
             android:id="@+id/rbAnd"

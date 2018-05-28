@@ -100,6 +100,15 @@ public class DB {
         mDB.delete(TAG_TABLE, TAG_COLUMN_ID + " = " + id, null);
     }
 
+
+    public Cursor getRecords(RecordsSortParams sortParams) {
+        if (sortParams.sortByIncTime)
+            return mDB.rawQuery("SELECT * FROM " + RECORD_TABLE +
+                              " ORDER BY " + R_COLUMN_DATE, null);
+        else
+            return null;
+    }
+
     // получить все данные из таблицы DB_TABLE
     public Cursor getAllData(long msStartTime) {
         if (msStartTime == 0)
