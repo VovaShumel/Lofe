@@ -59,7 +59,7 @@
             android:layout_alignLeft="@+id/btnChooseTagsDialogOk"
             android:layout_marginStart="-60dp"
             android:layout_marginLeft="-60dp"
-            android:text="@string/BtnNameOk" />
+            android:text="@string/BtnNameOrderByDate" />
 
         <RadioButton
             android:id="@+id/rbAnd"
