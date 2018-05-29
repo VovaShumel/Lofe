@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.livejournal.lofe.lofe.MyUtil.log;
+
 // TODO эту активити и соотв слой переименовать, сортировка не только по ярлыкам
 
 // Активити выбора ярлыков для сортировки по ярлыкам
@@ -102,6 +104,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 //sortParams.sortByIncTime = true;
                 intent = new Intent(this, ChooseTagsActivity.class);
                 intent.putExtra(RecordsSortParams.class.getCanonicalName(), sortParams);
+                log("sort param3");
                 //intent = new Intent();
                 //intent.p
                 setResult(RESULT_OK, intent);

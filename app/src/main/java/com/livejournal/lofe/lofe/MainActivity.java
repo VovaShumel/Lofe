@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import static com.livejournal.lofe.lofe.MyLog.d;
+import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener,
                                                                 LoaderCallbacks<Cursor> {
@@ -39,6 +40,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     DB db;
     long tagId = 0L;
     long msStartTime;
+    RecordsSortParams sortParams;
     int position = 0;
     SimpleCursorAdapter scAdapter;
     ImageButton ibFilter;
@@ -183,16 +185,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
 
-        RecordsSortParams sortParams = (RecordsSortParams) getIntent().getParcelableExtra(
+        RecordsSortParams newSortParams = (RecordsSortParams) getIntent().getParcelableExtra(
                                             RecordsSortParams.class.getCanonicalName());
-        if (sortParams != null) {
+        if (newSortParams != null) {
             //if (sortParams.sortByIncTime)
-
-
+            log("sort param2");
+            sortParams = newSortParams;
         } else {
+            sortParams = null;
             tagId = data.getLongExtra("tagId", 0);
             msStartTime = data.getLongExtra("msStartTime", 0);
-            MyUtil.log("При возвращении из сортировки ярлыков получили " + msStartTime + " мс");
+            log("При возвращении из сортировки ярлыков получили " + msStartTime + " мс");
             getSupportLoaderManager().restartLoader(0, null, this);
             getSupportLoaderManager().getLoader(0).forceLoad();
         }
@@ -236,7 +239,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, db, tagId, msStartTime);
+        return new MyCursorLoader(this, db, tagId, msStartTime, sortParams);
     }
 
     @Override
@@ -258,22 +261,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         DB db;
         long id, msStartTime;
+        RecordsSortParams sortParams;
 
-        private MyCursorLoader(Context context, DB db, long id, long msStartTime) {
+        private MyCursorLoader(Context context, DB db, long id, long msStartTime,
+                               RecordsSortParams sortParams) {
             super(context);
             this.db = db;
             this.id = id;
             this.msStartTime = msStartTime;
+            this.sortParams = sortParams;
         }
 
         @Override
         public Cursor loadInBackground() {
             Cursor cursor;
-            if (id == 0)
-                cursor = db.getAllData(msStartTime);
-            else {
-                cursor = db.getTagedRecord(id);
-
+            if (sortParams != null) {
+                cursor = db.getRecords(sortParams);
+                log("sort param1");
+            } else {
+                if (id == 0)
+                    cursor = db.getAllData(msStartTime);
+                else {
+                    cursor = db.getTagedRecord(id);
+                }
             }
             return cursor;
         }
