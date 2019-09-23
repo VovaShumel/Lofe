@@ -9,6 +9,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Layout;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +37,8 @@ import static com.livejournal.lofe.lofe.MyUtil.log;
 // Активити выбора ярлыков для сортировки по ярлыкам
 public class ChooseTagsActivity extends FragmentActivity implements View.OnClickListener,
                                                         LoaderCallbacks<Cursor> {
-    Button ibOk, ibNone, ibAll, bByDate;
+    RelativeLayout SortingLayout;
+    Button bExpandCollapse, ibOk, ibNone, ibAll, bByDate;
     TextView tvDate;
     GridView gvTags;
     CheckBox cbApplyTime;
@@ -51,7 +55,12 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_tags);
 
+        SortingLayout = (RelativeLayout) findViewById(R.id.ChooseTagsSortingOptionsLayout);
+
         cbApplyTime = (CheckBox) findViewById(R.id.cbApplyTime_aChooseTags);
+
+        bExpandCollapse = (Button) findViewById(R.id.btnChooseTagsExpandCollapse);
+        bExpandCollapse.setOnClickListener(this);
 
         ibOk = (Button) findViewById(R.id.btnChooseTagsDialogOk);
         ibOk.setOnClickListener(this);
@@ -92,6 +101,9 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 //Toast.makeText(this, "На дату нажимается", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, AlarmActivity.class);
                 startActivityForResult(intent, 1);
+                break;
+            case R.id.btnChooseTagsExpandCollapse:
+                SortingLayout.setLayoutParams(new LinearLayout.LayoutParams(SortingLayout.getWidth(), (SortingLayout.getHeight() < 1000) ? 1000 : 300));
                 break;
             case R.id.btnChooseTagsDialogNone:
                 break;

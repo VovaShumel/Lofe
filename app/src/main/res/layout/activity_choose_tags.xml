@@ -21,9 +21,22 @@
 
 
     <RelativeLayout
+        android:id="@+id/ChooseTagsSortingOptionsLayout"
         android:layout_width="match_parent"
         android:layout_height="84dp"
         android:layout_weight="1">
+
+        <Button
+            android:id="@+id/btnChooseTagsDialogOrderByDate2"
+            android:layout_width="148dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/cbApplyTime_aChooseTags"
+            android:layout_alignStart="@+id/btnChooseTagsDialogOk"
+            android:layout_alignLeft="@+id/btnChooseTagsDialogOk"
+            android:layout_marginStart="-268dp"
+            android:layout_marginLeft="-268dp"
+            android:layout_marginBottom="-3dp"
+            android:text="@string/BtnNameOrderByDate" />
 
         <Button
             android:id="@+id/btnChooseTagsDialogNone"
@@ -34,10 +47,23 @@
             android:text="@string/BtnNameNone" />
 
         <Button
+            android:id="@+id/btnChooseTagsExpandCollapse"
+            android:layout_width="122dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="120dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/BtnNameNone" />
+
+        <Button
             android:id="@+id/btnChooseTagsDialogAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="54dp"
+            android:layout_marginRight="14dp"
             android:layout_toLeftOf="@+id/btnChooseTagsDialogOk"
             android:layout_toRightOf="@+id/btnChooseTagsDialogNone"
             android:text="@string/BtnNameAll" />
@@ -77,9 +103,9 @@
             android:id="@+id/cbApplyTime_aChooseTags"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
             android:checked="true"
             android:gravity="bottom|left"
             android:text="" />

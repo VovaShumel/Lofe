@@ -25,6 +25,13 @@
     <string name="ForTomorrow">На завтра</string>
     <string name="ForNewTime">На новое время</string>
 
+    <string name="ByCreateDate">Создания</string>
+    <string name="ByLastChangeDate">Последнего изменения</string>
+    <string name="ByAlarmDate">Назначенной</string>
+
+    <string name="BtnExpand">Развернуть</string>
+    <string name="BtnCollapse">Свернуть</string>
+
     <string name="btnName_test">Уведом</string>
 
     <string name="hintText_setTag">Уведом</string>
