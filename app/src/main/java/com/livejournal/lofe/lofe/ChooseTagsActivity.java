@@ -38,7 +38,7 @@ import static com.livejournal.lofe.lofe.MyUtil.log;
 public class ChooseTagsActivity extends FragmentActivity implements View.OnClickListener,
                                                         LoaderCallbacks<Cursor> {
     RelativeLayout SortingLayout;
-    Button bExpandCollapse, ibOk, ibNone, ibAll, bByDate;
+    Button bExpandCollapse, ibOk, ibNone, ibAll, bByDate, bOpenMap;
     TextView tvDate;
     GridView gvTags;
     CheckBox cbApplyTime;
@@ -61,6 +61,9 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
 
         bExpandCollapse = (Button) findViewById(R.id.btnChooseTagsExpandCollapse);
         bExpandCollapse.setOnClickListener(this);
+
+        bOpenMap = (Button) findViewById(R.id.btnChooseTagsMap);
+        bOpenMap.setOnClickListener(this);
 
         ibOk = (Button) findViewById(R.id.btnChooseTagsDialogOk);
         ibOk.setOnClickListener(this);
@@ -96,10 +99,15 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     }
 
     public void onClick(View v) {
+        Intent intent;
         switch (v.getId()) {
             case R.id.tvDate_aChooseTags:
                 //Toast.makeText(this, "На дату нажимается", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, AlarmActivity.class);
+                intent = new Intent(this, AlarmActivity.class);
+                startActivityForResult(intent, 1);
+                break;
+            case R.id.btnChooseTagsMap:
+                intent = new Intent(this, AlarmActivity.class);
                 startActivityForResult(intent, 1);
                 break;
             case R.id.btnChooseTagsExpandCollapse:

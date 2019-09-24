@@ -41,6 +41,7 @@
     <string name="strDescr_ToSortMenuBtnImg">Изображение для кнопки перехода к меню типа сортировки</string>
     <string name="strDescr_TagCreateBtnImg">Изображение для кнопки подтверждения создания ярлыка</string>
     <string name="strDescr_TagImg">Изображение на ярлыке</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>
