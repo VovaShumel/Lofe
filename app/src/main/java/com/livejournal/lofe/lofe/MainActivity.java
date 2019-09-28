@@ -79,12 +79,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after){}
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count){}
         });
 
         db = new DB(this);  // TODO вроде бы это можно перенести непосредственно в работу с курсором
@@ -207,8 +204,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             msStartTime = data.getLongExtra("msStartTime", 0);
             //log("При возвращении из сортировки ярлыков получили " + msStartTime + " мс");
         }
-        getSupportLoaderManager().restartLoader(0, null, this);
-        getSupportLoaderManager().getLoader(0).forceLoad();
+        //getSupportLoaderManager().restartLoader(0, null, this);
+        //getSupportLoaderManager().getLoader(0).forceLoad();
+        RedrawItemsList(GetCursor(db, tagId, msStartTime, sortParams));
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -237,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
                 return super.onContextItemSelected(item);
         }
-        getSupportLoaderManager().getLoader(0).forceLoad();     // получаем новый курсор с данными
+        //getSupportLoaderManager().getLoader(0).forceLoad();     // получаем новый курсор с данными
+        RedrawItemsList(GetCursor(db, tagId, msStartTime, sortParams));
         return true;
     }
 
