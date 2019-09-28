@@ -124,6 +124,59 @@
 
         </RadioGroup>
 
+        <View
+            android:id="@+id/divider3"
+            android:layout_below="@id/rg2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <RadioGroup
+            android:id="@+id/rg3"
+            android:layout_below="@id/divider3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbHightPriorityFirst"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="С важных" />
+
+            <RadioButton
+                android:id="@+id/rbLowPriorityFirst"
+                android:layout_alignTop="@id/rbHightPriorityFirst"
+                android:layout_toRightOf="@id/rbHightPriorityFirst"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="С неважных" />
+
+            <RadioButton
+                android:id="@+id/rbHightOrEqualThan"
+                android:layout_marginLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Важнее, чем" />
+
+        </RadioGroup>
+
+        <SeekBar
+            android:id="@+id/sbChTagPriority"
+            android:layout_below="@id/rg3"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="5"/>
+
         <Button
             android:id="@+id/btnChooseTagsMap"
             android:layout_width="148dp"
