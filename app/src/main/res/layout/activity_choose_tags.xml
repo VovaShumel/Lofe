@@ -27,6 +27,104 @@
         android:layout_weight="1">
 
         <Button
+            android:id="@+id/btnChooseTagsExpandCollapse"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="@string/BtnCollapse" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_below="@id/btnChooseTagsExpandCollapse"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <RadioGroup
+            android:id="@+id/rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbAnd"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="And" />
+
+            <RadioButton
+                android:id="@+id/rbOr"
+                android:layout_below="@id/divider"
+                android:layout_alignTop="@id/rbAnd"
+                android:layout_toRightOf="@id/rbAnd"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Or" />
+
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnChooseTagsDialogNone"
+            android:layout_below="@id/divider"
+            android:layout_toRightOf="@id/rg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="@string/BtnNameNone" />
+
+        <Button
+            android:id="@+id/btnChooseTagsDialogAll"
+            android:layout_width="116dp"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/btnChooseTagsDialogNone"
+            android:layout_toRightOf="@+id/btnChooseTagsDialogNone"
+            android:layout_marginLeft="27dp"
+            android:text="@string/BtnNameAll" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_below="@id/btnChooseTagsDialogNone"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <RadioGroup
+            android:id="@+id/rg2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/divider2"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbAndGlobal"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="And" />
+
+            <RadioButton
+                android:id="@+id/rbOrGlobal"
+                android:layout_below="@id/divider"
+                android:layout_alignTop="@id/rbAnd"
+                android:layout_toRightOf="@id/rbAnd"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Or" />
+
+        </RadioGroup>
+
+        <Button
             android:id="@+id/btnChooseTagsMap"
             android:layout_width="148dp"
             android:layout_height="wrap_content"
@@ -38,37 +136,10 @@
             android:layout_marginBottom="-3dp"
             android:text="@string/BtnNameOrderByDate" />
 
-        <Button
-            android:id="@+id/btnChooseTagsDialogNone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="60dp"
-            android:text="@string/BtnNameNone" />
 
-        <Button
-            android:id="@+id/btnChooseTagsExpandCollapse"
-            android:layout_width="151dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="2dp"
-            android:text="@string/BtnNameNone" />
 
-        <Button
-            android:id="@+id/btnChooseTagsDialogAll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="176dp"
-            android:layout_marginRight="19dp"
-            android:layout_toLeftOf="@+id/btnChooseTagsDialogOk"
-            android:layout_toRightOf="@+id/btnChooseTagsDialogNone"
-            android:text="@string/BtnNameAll" />
+
+
 
         <Button
             android:id="@+id/btnChooseTagsDialogOk"
@@ -78,7 +149,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="43dp"
             android:text="@string/BtnNameOk" />
 
         <Button
@@ -92,17 +163,7 @@
             android:layout_marginLeft="-60dp"
             android:text="@string/BtnNameOrderByDate" />
 
-        <RadioButton
-            android:id="@+id/rbAnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="And" />
 
-        <RadioButton
-            android:id="@+id/rbOr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Or" />
 
         <CheckBox
             android:id="@+id/cbApplyTime_aChooseTags"
@@ -123,6 +184,8 @@
             android:layout_toEndOf="@+id/cbApplyTime_aChooseTags"
             android:layout_toRightOf="@+id/cbApplyTime_aChooseTags"
             android:text="TextView" />
+
+
 
     </RelativeLayout>
 </LinearLayout>
