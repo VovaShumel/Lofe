@@ -2,8 +2,10 @@ package com.livejournal.lofe.lofe;
 
 import android.app.KeyguardManager;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.FragmentActivity;
 import android.view.WindowManager;
+
+import androidx.fragment.app.FragmentActivity;
 
 public class AlarmTriggeredActivity extends FragmentActivity {
 

@@ -2,16 +2,11 @@ package com.livejournal.lofe.lofe;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
+import android.widget.SimpleCursorAdapter;
 
-import java.sql.Array;
 import java.util.ArrayList;
 
 public class TagsAdapter extends SimpleCursorAdapter {

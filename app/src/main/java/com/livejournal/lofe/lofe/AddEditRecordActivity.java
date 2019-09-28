@@ -1,17 +1,13 @@
 package com.livejournal.lofe.lofe;
 
-import android.app.Activity;
-import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
+//import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.LoaderManager.LoaderCallbacks;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,19 +17,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
-import static com.livejournal.lofe.lofe.R.color.colorInactive;
 
 public class AddEditRecordActivity extends FragmentActivity implements View.OnClickListener,
-                                                        LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CM_EDIT_ID = 1;
     private static final int CM_DELETE_ID = 2;
     EditText etRecordText;
@@ -87,7 +86,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
         scAdapter = new Tags2Adapter(this, R.layout.item_tag2, null, from, to, 0);                  // создааем адаптер и настраиваем список
         gvTags = (GridView) findViewById(R.id.gvTags);
-        gvTags.setAdapter(scAdapter);
+        gvTags.setAdapter((ListAdapter) scAdapter);
 
         gvTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,

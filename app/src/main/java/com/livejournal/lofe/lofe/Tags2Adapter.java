@@ -2,10 +2,10 @@ package com.livejournal.lofe.lofe;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
 

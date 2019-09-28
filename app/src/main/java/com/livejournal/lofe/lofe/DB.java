@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 
 import static android.os.Environment.*;
 import static com.livejournal.lofe.lofe.MyLog.d;
+import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class DB {
 
@@ -303,6 +304,17 @@ public class DB {
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         }
+    }
+
+    static Cursor GetCursor(DB db, long id, long msStartTime, RecordsSortParams sortParams) {
+        Cursor cursor;
+        if (sortParams != null) {
+            cursor = db.getRecords(sortParams);
+            log("sort param1");
+        } else
+            cursor = (id == 0) ? db.getAllData(msStartTime) : db.getTagedRecord(id);
+
+        return cursor;
     }
 }
 

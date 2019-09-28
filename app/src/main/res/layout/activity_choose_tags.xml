@@ -23,7 +23,7 @@
     <RelativeLayout
         android:id="@+id/ChooseTagsSortingOptionsLayout"
         android:layout_width="match_parent"
-        android:layout_height="84dp"
+        android:layout_height="300dp"
         android:layout_weight="1">
 
         <Button
@@ -44,11 +44,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="60dp"
             android:text="@string/BtnNameNone" />
 
         <Button
             android:id="@+id/btnChooseTagsExpandCollapse"
-            android:layout_width="122dp"
+            android:layout_width="151dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -61,9 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="6dp"
-            android:layout_marginTop="54dp"
-            android:layout_marginRight="14dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="176dp"
+            android:layout_marginRight="19dp"
             android:layout_toLeftOf="@+id/btnChooseTagsDialogOk"
             android:layout_toRightOf="@+id/btnChooseTagsDialogNone"
             android:text="@string/BtnNameAll" />
@@ -73,7 +75,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_margin="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="5dp"
             android:text="@string/BtnNameOk" />
 
         <Button

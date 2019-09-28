@@ -5,12 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -22,17 +16,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import static com.livejournal.lofe.lofe.MyLog.d;
 import static com.livejournal.lofe.lofe.MyUtil.log;
+import static com.livejournal.lofe.lofe.DB.GetCursor;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener,
-                                                                LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int CM_EDIT_ID = 1;
     private static final int CM_DELETE_ID = 2;
@@ -48,6 +49,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     AutoCompleteTextView tvSearch;
     HTTPD httpd;
 
+    public void RedrawItemsList(Cursor cursor) {
+        scAdapter.swapCursor(cursor);
+        if(state != null) {
+            lvData.onRestoreInstanceState(state);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(tvSearch.getWindowToken(), 0);
+        }
+    }
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -56,10 +66,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         httpd = new HTTPD();
 
-        ibFilter = (ImageButton) findViewById(R.id.imgFilter);
+        ibFilter = findViewById(R.id.imgFilter);
         ibFilter.setOnClickListener(this);
 
-        tvSearch = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        tvSearch = findViewById(R.id.autoCompleteTextView);
         tvSearch.addTextChangedListener(new TextWatcher(){
             @Override
             public void afterTextChanged(Editable s) {
@@ -92,7 +102,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         int[] to = new int[] {R.id.tv__item_record__recordText};
 
         scAdapter = new SimpleCursorAdapter(this, R.layout.item_record, null, from, to, 0);
-        lvData = (ListView) findViewById(R.id.lvData);
+        lvData = findViewById(R.id.lvData);
         lvData.setAdapter(scAdapter);
 
         registerForContextMenu(lvData);
@@ -131,9 +141,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        getSupportLoaderManager().initLoader(0, null, this);
+        RedrawItemsList(GetCursor(db, tagId, msStartTime, sortParams));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //getSupportLoaderManager().initLoader(0, null, this);
+
+        FloatingActionButton fab = findViewById(R.id.fab);
         //fab.setImageResource(R.drawable.img_add2);
         fab.setBackgroundResource(R.drawable.img_add2);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -145,7 +157,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 //intent.putExtra("tagId", tagId);
                 startActivity(intent);
                 //startActivityForResult(intent, 1);
-                getSupportLoaderManager().getLoader(0).forceLoad();                         // получаем новый курсор с данными
+                //getSupportLoaderManager().getLoader(0).forceLoad();                         // получаем новый курсор с данными
             }
         });
     }
@@ -185,8 +197,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (data == null) {return;}
 
-        RecordsSortParams newSortParams = (RecordsSortParams) data.getParcelableExtra(
-                                            RecordsSortParams.class.getCanonicalName());
+        RecordsSortParams newSortParams = data.getParcelableExtra(RecordsSortParams.class.getCanonicalName());
         if (newSortParams != null) {
             //if (sortParams.sortByIncTime)
             sortParams = newSortParams;
@@ -238,7 +249,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bndl) {
-        return new MyCursorLoader(this, db, tagId, msStartTime, sortParams);
+        //return new Loader<Cursor>(this, db, tagId, msStartTime, sortParams);
+        return new Loader<Cursor>(this);
     }
 
     @Override

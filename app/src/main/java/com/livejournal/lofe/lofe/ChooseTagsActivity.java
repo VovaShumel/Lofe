@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.SimpleCursorAdapter;
+//import android.support.v4.app.FragmentActivity;
+//import android.support.v4.app.LoaderManager.LoaderCallbacks;
+//import android.support.v4.content.CursorLoader;
+//import android.support.v4.content.Loader;
+//import android.support.v4.widget.SimpleCursorAdapter;
 import android.text.Layout;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -22,8 +22,14 @@ import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.fragment.app.FragmentActivity;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.CursorLoader;
+import androidx.loader.content.Loader;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +42,7 @@ import static com.livejournal.lofe.lofe.MyUtil.log;
 
 // Активити выбора ярлыков для сортировки по ярлыкам
 public class ChooseTagsActivity extends FragmentActivity implements View.OnClickListener,
-                                                        LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor> {
     RelativeLayout SortingLayout;
     Button bExpandCollapse, ibOk, ibNone, ibAll, bByDate, bOpenMap;
     TextView tvDate;
@@ -55,29 +61,29 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_tags);
 
-        SortingLayout = (RelativeLayout) findViewById(R.id.ChooseTagsSortingOptionsLayout);
+        SortingLayout = findViewById(R.id.ChooseTagsSortingOptionsLayout);
 
-        cbApplyTime = (CheckBox) findViewById(R.id.cbApplyTime_aChooseTags);
+        cbApplyTime = findViewById(R.id.cbApplyTime_aChooseTags);
 
-        bExpandCollapse = (Button) findViewById(R.id.btnChooseTagsExpandCollapse);
+        bExpandCollapse = findViewById(R.id.btnChooseTagsExpandCollapse);
         bExpandCollapse.setOnClickListener(this);
 
-        bOpenMap = (Button) findViewById(R.id.btnChooseTagsMap);
+        bOpenMap = findViewById(R.id.btnChooseTagsMap);
         bOpenMap.setOnClickListener(this);
 
-        ibOk = (Button) findViewById(R.id.btnChooseTagsDialogOk);
+        ibOk = findViewById(R.id.btnChooseTagsDialogOk);
         ibOk.setOnClickListener(this);
 
-        ibNone = (Button) findViewById(R.id.btnChooseTagsDialogNone);
+        ibNone = findViewById(R.id.btnChooseTagsDialogNone);
         ibNone.setOnClickListener(this);
 
-        ibAll = (Button) findViewById(R.id.btnChooseTagsDialogAll);
+        ibAll = findViewById(R.id.btnChooseTagsDialogAll);
         ibAll.setOnClickListener(this);
 
-        bByDate = (Button) findViewById(R.id.btnChooseTagsDialogOrderByDate);
+        bByDate = findViewById(R.id.btnChooseTagsDialogOrderByDate);
         bByDate.setOnClickListener(this);
 
-        tvDate = (TextView) findViewById(R.id.tvDate_aChooseTags);
+        tvDate = findViewById(R.id.tvDate_aChooseTags);
         tvDate.setOnClickListener(this);
 
         GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
@@ -92,10 +98,12 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         int[] to = new int[] { R.id.tvTag2Text, R.id.cbTag2Checked};
 
         tagsAdapter = new TagsAdapter(this, R.layout.item_tag2, null, from, to, 0);                 // создааем адаптер и настраиваем список
-        gvTags = (GridView) findViewById(R.id.gvDialogTags);
+        gvTags = findViewById(R.id.gvDialogTags);
         gvTags.setAdapter(tagsAdapter);
 
-        getSupportLoaderManager().initLoader(0, null, this);                                        // создаем лоадер для чтения данных
+        tagsAdapter.swapCursor(db.getAllTag());
+
+        //getSupportLoaderManager().initLoader(0, null, this);                                        // создаем лоадер для чтения данных
     }
 
     public void onClick(View v) {
@@ -111,7 +119,15 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 startActivityForResult(intent, 1);
                 break;
             case R.id.btnChooseTagsExpandCollapse:
-                SortingLayout.setLayoutParams(new LinearLayout.LayoutParams(SortingLayout.getWidth(), (SortingLayout.getHeight() < 1000) ? 1000 : 300));
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(SortingLayout.getWidth(), 300);
+                if (SortingLayout.getHeight() < 1000) {
+                    params.height = 1000;
+                    bExpandCollapse.setText(R.string.BtnCollapse);
+                } else
+                    bExpandCollapse.setText(R.string.BtnExpand);
+
+                SortingLayout.setLayoutParams(params);
+                //SortingLayout.setLayoutParams(new LinearLayout.LayoutParams(SortingLayout.getWidth(), (SortingLayout.getHeight() < 1000) ? 1000 : 300));
                 break;
             case R.id.btnChooseTagsDialogNone:
                 break;
@@ -135,11 +151,10 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 db.close();
                 ArrayList<Integer> chTaags = tagsAdapter.getCheckedTags();
                 intent = new Intent();
-                if (chTaags.size() > 0) {
+                if (chTaags.size() > 0)
                     intent.putExtra("tagId", chTaags.get(0));
-                } else {
+                else
                     intent.putExtra("tagId", 0);
-                }
 
                 if (cbApplyTime.isChecked())                            // Ярлыки отображать с учётом времени?
                     intent.putExtra("msStartTime", msStartTime);
@@ -164,7 +179,8 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this, db);
+        //return new Loader<Cursor>(this, db);
+        return new Loader<Cursor>(this);
     }
 
     @Override
