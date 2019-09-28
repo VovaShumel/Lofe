@@ -98,6 +98,7 @@
 
         <RadioGroup
             android:id="@+id/rg2"
+            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider2"
@@ -146,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="С важных" />
+                android:text="V" />
 
             <RadioButton
                 android:id="@+id/rbLowPriorityFirst"
@@ -155,14 +156,14 @@
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="С неважных" />
+                android:text="^" />
 
             <RadioButton
                 android:id="@+id/rbHightOrEqualThan"
                 android:layout_marginLeft="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Важнее, чем" />
+                android:text=">=" />
 
         </RadioGroup>
 
