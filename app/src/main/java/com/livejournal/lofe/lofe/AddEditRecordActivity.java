@@ -4,10 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-//import android.support.v4.app.FragmentActivity;
-//import android.support.v4.app.LoaderManager.LoaderCallbacks;
-//import android.support.v4.content.CursorLoader;
-//import android.support.v4.content.Loader;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +14,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
@@ -32,7 +29,8 @@ import java.util.Date;
 import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
 
 public class AddEditRecordActivity extends FragmentActivity implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+                                                                       SeekBar.OnSeekBarChangeListener,
+                                                                       LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CM_EDIT_ID = 1;
     private static final int CM_DELETE_ID = 2;
     EditText etRecordText;
@@ -40,8 +38,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     Button btnAddTag;
     GridView gvTags;
     TextView tvDate;
-    long id, tagId;
-    long ms;
+    SeekBar sbPriority;
+    long id, tagId, ms, showedPriority;
     int position;
     DB db;
 
@@ -57,19 +55,22 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         tagId = intent.getLongExtra("tagId", 0L);
         position = intent.getIntExtra("position", 0);
 
-        ibOk = (ImageButton) findViewById(R.id.imgBtnOkEdtRecord);
+        ibOk = findViewById(R.id.imgBtnOkEdtRecord);
         ibOk.setOnClickListener(this);
 
-        btnAddTag = (Button) findViewById(R.id.btnAddTag);
+        btnAddTag = findViewById(R.id.btnAddTag);
         btnAddTag.setOnClickListener(this);
 
-        tvDate = (TextView) findViewById(R.id.tvDate);
+        tvDate = findViewById(R.id.tvDate);
         tvDate.setOnClickListener(this);
+
+        sbPriority = findViewById(R.id.sbPriority);
+        sbPriority.setOnSeekBarChangeListener(this);
 
         db = new DB(this);                                                                          // открываем подключение к БД
         db.open();
 
-        etRecordText = (EditText) findViewById(R.id.etRecordText);
+        etRecordText = findViewById(R.id.etRecordText);
 
         if (id > 0) {                                                                               // редактирование записи
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);       // Чтобы автоматически не отображалась
@@ -111,6 +112,17 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         getSupportLoaderManager().initLoader(0, null, this);                                        // создаем лоадер для чтения данных
     }
 
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){}
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar){}
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        //tvDate.setText(String.valueOf(seekBar.getProgress()));
+        showedPriority = seekBar.getProgress();
+    }
+
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
@@ -128,9 +140,9 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
             case R.id.imgBtnOkEdtRecord:
                 String s = etRecordText.getText().toString();
                 if (s != null) { // TODO тут надо проверять не на нулл, а на пустую строку
-                    if (id > 0) {
+                    if (id > 0)
                         db.edtRecordText(s, id);
-                    } else {
+                    else {
                         id = db.addRecordText(s);   // TODO потом слить в одну операцию
                         db.edtRecordDate(id, getCurTimeMS());
                     }
@@ -138,16 +150,14 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                     if (ms != 0)
                         db.edtRecordDate(id, ms);
 
-                    ArrayList<ChTag> chTags = scAdapter.getChTags();
-                    for(int i = 0; i < chTags.size(); i++) {
-                        db.invertTag(id, chTags.get(i).id);
-                    }
+                    db.edtRecordPriority(id, showedPriority);
 
-                } else {
-                    if (id > 0) {
-                        db.delRec(id);
-                    }
-                }
+                    ArrayList<ChTag> chTags = scAdapter.getChTags();
+                    for(int i = 0; i < chTags.size(); i++)
+                        db.invertTag(id, chTags.get(i).id);
+
+                } else if (id > 0)
+                    db.delRec(id);
 
                 db.close();
                 Intent intent = new Intent(this, MainActivity.class);

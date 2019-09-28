@@ -26,6 +26,7 @@ public class DB {
     private static final String R_COLUMN_ID = "_id";
     public static final String R_COLUMN_TEXT = "text";
     private static final String R_COLUMN_DATE = "alarm_date";
+    private static final String R_COLUMN_PRIORITY = "PRIORITY";
     // PRECEDENT_ACTION
     // NEXT_ACTION
 
@@ -228,6 +229,13 @@ public class DB {
     public void edtRecordDate(long id, long msDate) {
         ContentValues cv = new ContentValues();
         cv.put(R_COLUMN_DATE, msDate);
+        selectionArgs = new String[] {id + ""};
+        mDB.update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", selectionArgs);
+    }
+
+    public void edtRecordPriority(long id, long priority) {
+        ContentValues cv = new ContentValues();
+        cv.put(R_COLUMN_PRIORITY, priority);
         selectionArgs = new String[] {id + ""};
         mDB.update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", selectionArgs);
     }
