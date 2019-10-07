@@ -7,8 +7,14 @@ public class RecordsSortParams implements Parcelable {
 
     boolean sortByIncTime = false;
 
+    public boolean byIncPriority = false;
+    public boolean byDecPriority = false;
+
     public RecordsSortParams(boolean sortByIncTime) {
         this.sortByIncTime = sortByIncTime;
+    }
+
+    public RecordsSortParams() {
     }
 
     public int describeContents() {
@@ -16,7 +22,8 @@ public class RecordsSortParams implements Parcelable {
     }
 
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeInt(sortByIncTime ? 1 : 0);
+        parcel.writeInt((sortByIncTime ? 1 : 0) |
+                            (byDecPriority ? 2 : 0));
     }
 
     public static final Parcelable.Creator<RecordsSortParams> CREATOR = new Parcelable.Creator<RecordsSortParams>() {
@@ -30,6 +37,8 @@ public class RecordsSortParams implements Parcelable {
     };
 
     private RecordsSortParams(Parcel parcel) {
-        sortByIncTime = parcel.readInt() > 0;
+        int flags = parcel.readInt();
+        sortByIncTime = (flags & 1) > 0;
+        byDecPriority = (flags & 2) > 0;
     }
 }

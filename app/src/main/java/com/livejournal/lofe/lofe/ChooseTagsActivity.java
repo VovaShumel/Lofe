@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
@@ -45,6 +46,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         LoaderManager.LoaderCallbacks<Cursor> {
     RelativeLayout SortingLayout;
     Button bExpandCollapse, ibOk, ibNone, ibAll, bByDate, bOpenMap;
+    RadioButton rbHighPriorityFirst;
     TextView tvDate;
     GridView gvTags;
     CheckBox cbApplyTime;
@@ -80,6 +82,8 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         ibAll = findViewById(R.id.btnChooseTagsDialogAll);
         ibAll.setOnClickListener(this);
 
+        rbHighPriorityFirst = findViewById(R.id.RBP_HighFirst);
+
         bByDate = findViewById(R.id.btnChooseTagsDialogOrderByDate);
         bByDate.setOnClickListener(this);
 
@@ -108,6 +112,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
 
     public void onClick(View v) {
         Intent intent;
+        RecordsSortParams sortParams;
         switch (v.getId()) {
             case R.id.tvDate_aChooseTags:
                 //Toast.makeText(this, "На дату нажимается", Toast.LENGTH_SHORT).show();
@@ -136,7 +141,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 break;
             case R.id.btnChooseTagsDialogOrderByDate:
                 db.close();
-                RecordsSortParams sortParams = new RecordsSortParams(true); // TODO задефайнить
+                sortParams = new RecordsSortParams(true); // TODO задефайнить
                 //sortParams.sortByIncTime = true;
                 intent = new Intent(this, ChooseTagsActivity.class);
                 intent.putExtra(RecordsSortParams.class.getCanonicalName(), sortParams);
@@ -160,6 +165,12 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                     intent.putExtra("msStartTime", msStartTime);
                 else
                     intent.putExtra("msStartTime", 0);
+
+                if (rbHighPriorityFirst.isChecked()) {
+                    sortParams = new RecordsSortParams();
+                    sortParams.byDecPriority = true;
+                    intent.putExtra(RecordsSortParams.class.getCanonicalName(), sortParams);
+                }
 
                 setResult(RESULT_OK, intent);
                 finish();

@@ -44,6 +44,7 @@
 
         <RadioGroup
             android:id="@+id/rg"
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider"
@@ -51,7 +52,6 @@
 
             <RadioButton
                 android:id="@+id/rbAnd"
-                android:layout_marginTop="4dp"
                 android:layout_marginLeft="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -60,10 +60,8 @@
 
             <RadioButton
                 android:id="@+id/rbOr"
-                android:layout_below="@id/divider"
-                android:layout_alignTop="@id/rbAnd"
-                android:layout_toRightOf="@id/rbAnd"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Or" />
@@ -74,6 +72,7 @@
             android:id="@+id/btnChooseTagsDialogNone"
             android:layout_below="@id/divider"
             android:layout_toRightOf="@id/rg"
+            android:layout_toEndOf="@id/rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
@@ -96,63 +95,33 @@
             android:layout_margin="10dp"
             android:background="?android:attr/listDivider" />
 
-        <RadioGroup
-            android:id="@+id/rg2"
-            android:layout_centerHorizontal="true"
+        <TextView
+            android:id="@+id/TV_Priority"
+            android:layout_margin="4dp"
+            android:layout_marginTop="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/divider2"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/rbAndGlobal"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="And" />
-
-            <RadioButton
-                android:id="@+id/rbOrGlobal"
-                android:layout_below="@id/divider"
-                android:layout_alignTop="@id/rbAnd"
-                android:layout_toRightOf="@id/rbAnd"
-                android:layout_marginLeft="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Or" />
-
-        </RadioGroup>
-
-        <View
-            android:id="@+id/divider3"
-            android:layout_below="@id/rg2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_margin="10dp"
-            android:background="?android:attr/listDivider" />
+            android:text="@string/txtPriority" />
 
         <RadioGroup
-            android:id="@+id/rg3"
-            android:layout_below="@id/divider3"
+            android:id="@+id/RG_Priority"
+            android:layout_toRightOf="@id/TV_Priority"
+            android:layout_alignTop="@id/TV_Priority"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/rbHightPriorityFirst"
-                android:layout_marginTop="4dp"
+                android:id="@+id/RBP_HighFirst"
                 android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
                 android:text="V" />
 
             <RadioButton
                 android:id="@+id/rbLowPriorityFirst"
-                android:layout_alignTop="@id/rbHightPriorityFirst"
-                android:layout_toRightOf="@id/rbHightPriorityFirst"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -165,11 +134,19 @@
                 android:layout_height="wrap_content"
                 android:text=">=" />
 
+            <RadioButton
+                android:id="@+id/RB_CT_RGP_Ignore"
+                android:layout_marginLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txtIgnore"
+                android:checked="true"/>
+
         </RadioGroup>
 
         <SeekBar
             android:id="@+id/sbChTagPriority"
-            android:layout_below="@id/rg3"
+            android:layout_below="@id/RG_Priority"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
@@ -177,6 +154,56 @@
             android:layout_height="wrap_content"
             android:max="10"
             android:progress="5"/>
+
+        <View
+            android:id="@+id/divider4"
+            android:layout_below="@id/sbChTagPriority"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <RadioGroup
+            android:id="@+id/RG_Date"
+            android:layout_below="@id/divider4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/RBD_NewFirst"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="V" />
+
+            <RadioButton
+                android:id="@+id/RBD_OldFirst"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="^" />
+
+            <RadioButton
+                android:id="@+id/RBD_OlderThen"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=">=" />
+
+            <RadioButton
+                android:id="@+id/RBD_Ignore"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txtIgnore"
+                android:checked="true"/>
+
+        </RadioGroup>
 
         <Button
             android:id="@+id/btnChooseTagsMap"
@@ -189,11 +216,6 @@
             android:layout_marginLeft="-268dp"
             android:layout_marginBottom="-3dp"
             android:text="@string/BtnNameOrderByDate" />
-
-
-
-
-
 
         <Button
             android:id="@+id/btnChooseTagsDialogOk"
@@ -238,8 +260,6 @@
             android:layout_toEndOf="@+id/cbApplyTime_aChooseTags"
             android:layout_toRightOf="@+id/cbApplyTime_aChooseTags"
             android:text="TextView" />
-
-
 
     </RelativeLayout>
 </LinearLayout>

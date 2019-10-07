@@ -31,6 +31,9 @@
 
     <string name="BtnExpand">Развернуть</string>
     <string name="BtnCollapse">Свернуть</string>
+    <string name="txtIgnore">Не учитывать</string>
+
+    <string name="txtPriority">Важность</string>
 
     <string name="btnName_test">Уведом</string>
 

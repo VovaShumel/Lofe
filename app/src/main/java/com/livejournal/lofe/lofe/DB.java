@@ -104,11 +104,17 @@ public class DB {
 
 
     public Cursor getRecords(RecordsSortParams sortParams) {
+        if (sortParams.byDecPriority) {
+            log("byDecPriority");
+            return mDB.rawQuery("SELECT * FROM " + RECORD_TABLE +
+                    " ORDER BY " + R_COLUMN_PRIORITY + " DESC", null);
+        }
+
         if (sortParams.sortByIncTime)
             return mDB.rawQuery("SELECT * FROM " + RECORD_TABLE +
-                              " ORDER BY " + R_COLUMN_DATE, null);
-        else
-            return null;
+                                " ORDER BY " + R_COLUMN_DATE, null);
+
+        return null;
     }
 
     // получить все данные из таблицы DB_TABLE
@@ -122,7 +128,6 @@ public class DB {
             calendar.set(Calendar.MINUTE, 0);
             calendar.add(Calendar.DAY_OF_YEAR, 1);
             msStartTime = calendar.getTimeInMillis();
-
 
             MyUtil.log("{");
             MyLog.d("Загрузка за прошедшие сутки от " + msStartTime);
@@ -317,6 +322,10 @@ public class DB {
     static Cursor GetCursor(DB db, long id, long msStartTime, RecordsSortParams sortParams) {
         Cursor cursor;
         if (sortParams != null) {
+
+            if (sortParams.byDecPriority)
+                log("byDecPriority");
+
             cursor = db.getRecords(sortParams);
             log("sort param1");
         } else
