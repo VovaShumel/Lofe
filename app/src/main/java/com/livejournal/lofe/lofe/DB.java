@@ -14,6 +14,7 @@ import java.util.GregorianCalendar;
 
 import static android.os.Environment.*;
 import static com.livejournal.lofe.lofe.MyLog.d;
+import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class DB {
@@ -172,9 +173,9 @@ public class DB {
         selectionArgs = new String[] {id + ""};
         Cursor c = mDB.query(RECORD_TABLE, columns, R_COLUMN_ID + " = ?", selectionArgs, null, null, null);
         if (c != null) {
-            if (c.moveToFirst()) {
+            if (c.moveToFirst())
                 s = c.getString(0);
-            }
+
             c.close();
         }
         return s;
@@ -333,5 +334,15 @@ public class DB {
 
         return cursor;
     }
+
+    static String GetRecordText(long recordId) {
+        String s = "";
+        DB db = new DB(MyApplication.getContext());
+        db.open();
+        s = db.getRecordText(recordId);
+        db.close();
+        return s;
+    }
+
 }
 

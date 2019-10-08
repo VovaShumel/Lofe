@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
+import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class AddEditRecordActivity extends FragmentActivity implements View.OnClickListener,
                                                                        SeekBar.OnSeekBarChangeListener,
@@ -39,7 +40,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     GridView gvTags;
     TextView tvDate;
     SeekBar sbPriority;
-    long id, tagId, ms, showedPriority;
+    long recordId, tagId, ms, showedPriority;
     int position;
     DB db;
 
@@ -51,7 +52,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         setContentView(R.layout.activity_add_edit_record);
 
         Intent intent = getIntent();
-        id = intent.getLongExtra("id", 0L);
+        recordId = intent.getLongExtra("id", 0L);
         tagId = intent.getLongExtra("tagId", 0L);
         position = intent.getIntExtra("position", 0);
 
@@ -72,11 +73,11 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
         etRecordText = findViewById(R.id.etRecordText);
 
-        if (id > 0) {                                                                               // редактирование записи
+        if (recordId > 0) {                                                                               // редактирование записи
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);       // Чтобы автоматически не отображалась
                                                                                                     // клавиатура с фокусом ввода в etRecordText
-            etRecordText.setText(db.getRecordText(id)); // TODO совместить эти действия в одно
-            SetDateText(db.getRecordDate(id));
+            etRecordText.setText(db.getRecordText(recordId)); // TODO совместить эти действия в одно
+            SetDateText(db.getRecordDate(recordId));
         } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
             //tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
             SetDateText(MyUtil.getCurTimeMS());
@@ -86,8 +87,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         int[] to = new int[] { R.id.tvTag2Text, R.id.cbTag2Checked };
 
         scAdapter = new Tags2Adapter(this, R.layout.item_tag2, null, from, to, 0);                  // создааем адаптер и настраиваем список
-        gvTags = (GridView) findViewById(R.id.gvTags);
-        gvTags.setAdapter((ListAdapter) scAdapter);
+        gvTags = findViewById(R.id.gvTags);
+        gvTags.setAdapter(scAdapter);
 
         gvTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -98,11 +99,11 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                         break;
                 }
 
-                long idRecord = AddEditRecordActivity.this.id;
+                long idRecord = AddEditRecordActivity.this.recordId;
                 if (idRecord > 0) {
                     db.invertTag(idRecord, id);
                 } else {
-                    AddEditRecordActivity.this.id = db.addRecordText(etRecordText.getText().toString());
+                    AddEditRecordActivity.this.recordId = db.addRecordText(etRecordText.getText().toString());
                 }
             }
         });
@@ -140,24 +141,24 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
             case R.id.imgBtnOkEdtRecord:
                 String s = etRecordText.getText().toString();
                 if (s != null) { // TODO тут надо проверять не на нулл, а на пустую строку
-                    if (id > 0)
-                        db.edtRecordText(s, id);
+                    if (recordId > 0)
+                        db.edtRecordText(s, recordId);
                     else {
-                        id = db.addRecordText(s);   // TODO потом слить в одну операцию
-                        db.edtRecordDate(id, getCurTimeMS());
+                        recordId = db.addRecordText(s);   // TODO потом слить в одну операцию
+                        db.edtRecordDate(recordId, getCurTimeMS());
                     }
 
                     if (ms != 0)
-                        db.edtRecordDate(id, ms);
+                        db.edtRecordDate(recordId, ms);
 
-                    db.edtRecordPriority(id, showedPriority);
+                    db.edtRecordPriority(recordId, showedPriority);
 
                     ArrayList<ChTag> chTags = scAdapter.getChTags();
                     for(int i = 0; i < chTags.size(); i++)
-                        db.invertTag(id, chTags.get(i).id);
+                        db.invertTag(recordId, chTags.get(i).id);
 
-                } else if (id > 0)
-                    db.delRec(id);
+                } else if (recordId > 0)
+                    db.delRec(recordId);
 
                 db.close();
                 Intent intent = new Intent(this, MainActivity.class);
@@ -175,6 +176,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.tvDate:
                 intent = new Intent(this, AlarmActivity.class);
+                log("AddEditRecordActivity recordId = " + recordId);
+                intent.putExtra("recordId", recordId);
                 startActivityForResult(intent, 1);
                 break;
         }
@@ -198,7 +201,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this, db, this.id);
+        return new MyCursorLoader(this, db, this.recordId);
     }
 
     @Override
