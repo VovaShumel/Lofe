@@ -1,7 +1,10 @@
 package com.livejournal.lofe.lofe;
 
 import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -17,9 +20,18 @@ public class AlarmTriggeredActivity extends FragmentActivity {
     TextView tvRecordText;
     long recordId;
 
+    AudioManager audioManager;
+
+    AFListener afListenerMusic;
+    AFListener afListenerSound;
+
+    MediaPlayer mpMusic;
+    MediaPlayer mpSound;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_triggered);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         Intent intent = getIntent();
         recordId = intent.getLongExtra("recordId", 0L);
@@ -36,5 +48,9 @@ public class AlarmTriggeredActivity extends FragmentActivity {
         KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
         //KeyguardManager.
         lock.disableKeyguard();
+
+        //-----
+        mpMusic = MediaPlayer.create(this, R.raw.rington);
+        mpMusic.start();
     }
 }
