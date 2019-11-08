@@ -19,6 +19,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,15 +47,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     SimpleCursorAdapter scAdapter;
     ImageButton ibFilter;
     Parcelable state;
-    AutoCompleteTextView tvSearch;
+    TextView tvSearch;
     HTTPD httpd;
 
     public void RedrawItemsList(Cursor cursor) {
         scAdapter.swapCursor(cursor);
         if(state != null) {
             lvData.onRestoreInstanceState(state);
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(tvSearch.getWindowToken(), 0);
+            //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            //imm.hideSoftInputFromWindow(tvSearch.getWindowToken(), 0);
         }
     }
 
@@ -69,13 +70,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ibFilter = findViewById(R.id.imgFilter);
         ibFilter.setOnClickListener(this);
 
-        tvSearch = findViewById(R.id.autoCompleteTextView);
+        tvSearch = findViewById(R.id.TV_AM_Find);
         tvSearch.addTextChangedListener(new TextWatcher(){
             @Override
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
                 if (str.length() >= 3)
-                    db.GetWithSubstr(str);
+                    RedrawItemsList(db.GetWithSubstr(str));
             }
 
             @Override

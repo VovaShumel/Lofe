@@ -17,15 +17,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteTextView"
-                android:layout_width="180dp"
+            <EditText
+                android:id="@+id/TV_AM_Find"
+                android:layout_width="267dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:text=""
-                android:hint="..."/>
+                android:hint="@string/txtInputTextToFind"
+                android:inputType="text"
+                android:text="" />
 
             <ImageButton
                 android:layout_width="60dp"

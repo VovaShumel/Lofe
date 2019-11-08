@@ -34,6 +34,9 @@
     <string name="txtIgnore">Не учитывать</string>
 
     <string name="txtPriority">Важность</string>
+    <string name="txtInputTextToFind">Введите текст для поиска</string>
+
+    <string name="txtMenuSettings">Настройки</string>
 
     <string name="btnName_test">Уведом</string>
 

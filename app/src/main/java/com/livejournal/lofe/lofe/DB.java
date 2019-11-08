@@ -78,15 +78,19 @@ public class DB {
         c.close();
     }
 
-    void GetWithSubstr(String s) {
-        Cursor c = mDB.rawQuery("SELECT * FROM " + RECORD_TABLE +
-                                     " WHERE " + R_COLUMN_TEXT + " LIKE '%" + s + "%'", null);
-        if (c.moveToFirst()) {
-            do {
-                MyUtil.log(c.getString(1));
-            } while (c.moveToNext());
-        }
-        c.close();
+//    void GetWithSubstr(String s) {
+//        Cursor c = mDB.rawQuery("SELECT * FROM " + RECORD_TABLE +
+//                                     " WHERE " + R_COLUMN_TEXT + " LIKE '%" + s + "%'", null);
+//        if (c.moveToFirst()) {
+//            do {
+//                MyUtil.log(c.getString(1));
+//            } while (c.moveToNext());
+//        }
+//        c.close();
+//    }
+
+    Cursor GetWithSubstr(String s) {
+        return mDB.rawQuery("SELECT * FROM " + RECORD_TABLE + " WHERE " + R_COLUMN_TEXT + " LIKE '%" + s + "%'", null);
     }
 
     public void GetTagTable() {
