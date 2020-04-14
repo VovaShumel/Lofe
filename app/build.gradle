@@ -16,6 +16,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildToolsVersion = '28.0.3'
+    compileOptions {
+        sourceCompatibility = 1.7
+        targetCompatibility = 1.7
+    }
 }
 
 dependencies {
@@ -29,4 +34,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'org.java-websocket:Java-WebSocket:1.4.1'
 }

@@ -29,6 +29,8 @@ import androidx.loader.content.Loader;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.net.UnknownHostException;
+
 import static com.livejournal.lofe.lofe.MyLog.d;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 import static com.livejournal.lofe.lofe.DB.GetCursor;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Parcelable state;
     TextView tvSearch;
     HTTPD httpd;
+    WSServer WSS;
 
     public void RedrawItemsList(Cursor cursor) {
         scAdapter.swapCursor(cursor);
@@ -66,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         msStartTime = MyUtil.getCurTimeMS();
 
         httpd = new HTTPD();
+
+        WSS = new WSServer();
+        WSS.start();
 
         ibFilter = findViewById(R.id.imgFilter);
         ibFilter.setOnClickListener(this);
