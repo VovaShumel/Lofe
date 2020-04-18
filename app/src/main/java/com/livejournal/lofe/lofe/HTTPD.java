@@ -99,24 +99,31 @@ class HTTPD {
 
             log(uri);
 
-            if (uri.equals("/"))
+            if (uri.equals("/")) {
                 filePath += "/index.html";
-            else
-                filePath += uri;
-
-            String answer = "";
-            try {
-                FileReader file = new FileReader(filePath); // Open file from SD Card
-                BufferedReader reader = new BufferedReader(file);
-                String line = "";
-                while ((line = reader.readLine()) != null) {
-                    answer += line;
+                String answer = ""; // Работает криво
+                try {
+                    FileReader file = new FileReader(filePath); // Open file from SD Card
+                    BufferedReader reader = new BufferedReader(file);
+                    String line = "";
+                    while ((line = reader.readLine()) != null) {
+                        answer += line + "\r\n";
+                    }
+                    reader.close();
+                } catch (IOException ioe) {
+                    Log.w("Httpd", ioe.toString());
                 }
-                reader.close();
-            } catch (IOException ioe) {
-                Log.w("Httpd", ioe.toString());
+                return newFixedLengthResponse(answer);
+            } else {
+                filePath += uri;
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(filePath);
+                    return newChunkedResponse(Response.Status.OK, getMimeTypeForFile(uri), fileInputStream);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    return newFixedLengthResponse(Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "Not Found");
+                }
             }
-            return newFixedLengthResponse(answer);
 
 //            String msg = "<html><head></head><body><ul>";
 //            DB db = new DB(MyApplication.getContext());
