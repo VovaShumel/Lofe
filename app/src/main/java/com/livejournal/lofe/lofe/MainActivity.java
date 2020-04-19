@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         WSS = new WSServer();
         WSS.start();
+        log("" + WSS.getConnectionLostTimeout());
 
         ibFilter = findViewById(R.id.imgFilter);
         ibFilter.setOnClickListener(this);
