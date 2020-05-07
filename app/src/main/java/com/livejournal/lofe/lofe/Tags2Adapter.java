@@ -9,6 +9,8 @@ import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
 
+import static com.livejournal.lofe.lofe.DBHelper.*;
+
 public class Tags2Adapter extends TagsAdapter {
 
     ChTag[] chTags, startChTags;
@@ -44,10 +46,10 @@ public class Tags2Adapter extends TagsAdapter {
             chTags = new ChTag[c.getCount()];
             c.moveToFirst();
             for (int i = 0; i < c.getCount(); i++) {
-                startChTags[i] = new ChTag(!c.isNull(c.getColumnIndex(DB.RECORD_TAG_COLUMN_RECORD_ID)),
-                                            c.getLong(c.getColumnIndex(DB.TAG_COLUMN_ID)));
-                chTags[i] = new ChTag(!c.isNull(c.getColumnIndex(DB.RECORD_TAG_COLUMN_RECORD_ID)),
-                                      c.getLong(c.getColumnIndex(DB.TAG_COLUMN_ID)));
+                startChTags[i] = new ChTag(!c.isNull(c.getColumnIndex(RECORD_TAG_COLUMN_RECORD_ID)),
+                                            c.getLong(c.getColumnIndex(TAG_COLUMN_ID)));
+                chTags[i] = new ChTag(!c.isNull(c.getColumnIndex(RECORD_TAG_COLUMN_RECORD_ID)),
+                                      c.getLong(c.getColumnIndex(TAG_COLUMN_ID)));
                 c.moveToNext();
             }
         }

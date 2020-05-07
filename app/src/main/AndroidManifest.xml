@@ -56,13 +56,8 @@
 
         <receiver android:name=".AlarmReceiver" />
 
-        <service
-            android:name=".AlarmService"
-            android:enabled="true"
-            android:exported="true" />
-
         <receiver
-            android:name=".BootBroadcast"
+            android:name=".service.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

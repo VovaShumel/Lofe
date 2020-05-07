@@ -8,12 +8,10 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -22,10 +20,14 @@ import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
 
+import com.livejournal.lofe.lofe.model.Alarm;
+import com.livejournal.lofe.lofe.model.LofeRecord;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static com.livejournal.lofe.lofe.DBHelper.*;
 import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 
@@ -42,7 +44,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     SeekBar sbPriority;
     long recordId, tagId, ms, showedPriority;
     int position;
-    DB db;
+    Boolean disallowBack;
+    LofeRecord record;
 
     Tags2Adapter scAdapter;
 
@@ -55,6 +58,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         recordId = intent.getLongExtra("id", 0L);
         tagId = intent.getLongExtra("tagId", 0L);
         position = intent.getIntExtra("position", 0);
+        disallowBack = intent.getBooleanExtra("disallowBack", false);
 
         ibOk = findViewById(R.id.imgBtnOkEdtRecord);
         ibOk.setOnClickListener(this);
@@ -68,49 +72,47 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
         sbPriority = findViewById(R.id.sbPriority);
         sbPriority.setOnSeekBarChangeListener(this);
 
-        db = new DB(this);                                                                          // открываем подключение к БД
-        db.open();
-
         etRecordText = findViewById(R.id.etRecordText);
 
         if (recordId > 0) {                                                                               // редактирование записи
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);       // Чтобы автоматически не отображалась
                                                                                                     // клавиатура с фокусом ввода в etRecordText
-            etRecordText.setText(db.getRecordText(recordId)); // TODO совместить эти действия в одно
-            SetDateText(db.getRecordDate(recordId));
+            etRecordText.setText(getRecordText(recordId)); // TODO совместить эти действия в одно
+            //SetDateText(getRecordDate(recordId));REFACT удалить после проверки нового
+            record = getRecord(recordId);
+            log("Зашли в ветку по recordId > 0, и record.time=" + record.getTime());
         } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
             //tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
-            SetDateText(MyUtil.getCurTimeMS());
+            //SetDateText(MyUtil.getCurTimeMS());REFACT удалить после проверки нового
+            record = new LofeRecord(MyUtil.getCurTimeMS());
         }
 
-        String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };                      // формируем столбцы сопоставления
+        SetDateText(record.getTime());
+
+        String[] from = new String[] { TAG_COLUMN_NAME, TAG_COLUMN_ID };                      // формируем столбцы сопоставления
         int[] to = new int[] { R.id.tvTag2Text, R.id.cbTag2Checked };
 
         scAdapter = new Tags2Adapter(this, R.layout.item_tag2, null, from, to, 0);                  // создааем адаптер и настраиваем список
         gvTags = findViewById(R.id.gvTags);
         gvTags.setAdapter(scAdapter);
 
-        gvTags.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                switch ((int)id) {                                                                  // TODO теоретически возможная ошибка
-                    case 11:                                                                        // TODO что за? Пиши подробнее
-                        startActivity(new Intent(AddEditRecordActivity.this, AlarmActivity.class));
-                        break;
-                }
-
-                long idRecord = AddEditRecordActivity.this.recordId;
-                if (idRecord > 0) {
-                    db.invertTag(idRecord, id);
-                } else {
-                    AddEditRecordActivity.this.recordId = db.addRecordText(etRecordText.getText().toString());
-                }
+        gvTags.setOnItemClickListener((parent, v, position, id) -> {
+            switch ((int)id) {                                        // TODO теоретически возможная ошибка
+                case 11:                                              // TODO что за? Пиши подробнее это вроде клик по одному ярлыку
+                    startActivity(new Intent(AddEditRecordActivity.this, AlarmActivity.class));
+                    break;
             }
+
+            long idRecord = AddEditRecordActivity.this.recordId;
+            if (idRecord > 0)
+                invertTag(idRecord, id);
+            else
+                AddEditRecordActivity.this.recordId = addRecordText(etRecordText.getText().toString());
         });
 
-        registerForContextMenu(gvTags);                                                             // добавляем контекстное меню к списку
+        registerForContextMenu(gvTags);                                          // добавляем контекстное меню к списку
 
-        getSupportLoaderManager().initLoader(0, null, this);                                        // создаем лоадер для чтения данных
+        getSupportLoaderManager().initLoader(0, null, this);     // создаем лоадер для чтения данных
     }
 
     @Override
@@ -142,31 +144,39 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                 String s = etRecordText.getText().toString();
                 if (s != null) { // TODO тут надо проверять не на нулл, а на пустую строку
                     if (recordId > 0)
-                        db.edtRecordText(s, recordId);
+                        edtRecordText(s, recordId);
                     else {
-                        recordId = db.addRecordText(s);   // TODO потом слить в одну операцию
-                        db.edtRecordDate(recordId, getCurTimeMS());
+                        recordId = addRecordText(s);   // TODO потом слить в одну операцию
+                        edtRecordDate(recordId, getCurTimeMS());
+                        record.setId(recordId); // REFACT потом recordId убрать, использовать только recordId
                     }
 
                     if (ms != 0)
-                        db.edtRecordDate(recordId, ms);
+                        edtRecordDate(recordId, ms);
 
-                    db.edtRecordPriority(recordId, showedPriority);
+                    edtRecordPriority(recordId, showedPriority);
 
                     ArrayList<ChTag> chTags = scAdapter.getChTags();
                     for(int i = 0; i < chTags.size(); i++)
-                        db.invertTag(recordId, chTags.get(i).id);
+                        invertTag(recordId, chTags.get(i).id);
+
+                    Alarm alarm = record.getAlarm();
+
+                    if (alarm.isEnabled()) {
+                        AlarmReceiver.setReminderAlarm(this, alarm);
+                        log("Будильник установлен на " + new SimpleDateFormat("dd.MM.yy HH:mm").format(alarm.getTime()));
+                    } else {
+                        AlarmReceiver.cancelReminderAlarm(this, alarm);
+                        log("Будильник для записи " + recordId + " выключен");
+                    }
 
                 } else if (recordId > 0)
-                    db.delRec(recordId);
+                    delRec(recordId);
 
-                db.close();
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("tagId", tagId);
                 intent.putExtra("position", position);
                 startActivity(intent);
-                //setResult(RESULT_OK, intent);
-                //finish();
                 break;
 
             case R.id.btnAddTag:
@@ -176,8 +186,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                 break;
             case R.id.tvDate:
                 intent = new Intent(this, AlarmActivity.class);
-                log("AddEditRecordActivity recordId = " + recordId);
                 intent.putExtra("recordId", recordId);
+                intent.putExtra("RECORD", record);
                 startActivityForResult(intent, 1);
                 break;
         }
@@ -186,22 +196,33 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     void SetDateText(long ms) {
         if (ms == 0)
             tvDate.setText(R.string.DATE_UNDEFINED);
-        else {
+        else
             tvDate.setText(new SimpleDateFormat("dd.MM.yy HH:mm").format(new Date(ms)));
-            MyLog.d("Тестируемый ярлык " + ms);
-        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null) {return;}         // TODO тут тоже соответственно упростить?
-        ms = data.getLongExtra("ms", 0);
-        SetDateText(ms);
+        if (data == null) {return;}         // TODO тут тоже соответственно упростить? А что это значит, "тоже соответсвенно упростить"?
+                                            // пиши яснее
+        //ms = data.getLongExtra("ms", 0);    // REFACT потом заменить на работу с LofeRecord
+        record = data.getParcelableExtra("RECORD");
+        ms = record.getTime();// REFACT потом убрать это, использовать только объект record
+        SetDateText(record.getTime());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (disallowBack) {
+            Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("disallowBack", true);
+            startActivity(i);
+        } else
+            super.onBackPressed();
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this, db, this.recordId);
+        return new MyCursorLoader(this, this.recordId);
     }
 
     @Override
@@ -214,19 +235,16 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     }
 
     static class MyCursorLoader extends CursorLoader {
-
-        DB db;
         long id;
 
-        MyCursorLoader(Context context, DB db, long id) {
+        MyCursorLoader(Context context, long id) {
             super(context);
-            this.db = db;
             this.id = id;
         }
 
         @Override
         public Cursor loadInBackground() {
-            return db.getRecordTags(id);
+            return getRecordTags(id);
         }
     }
 }

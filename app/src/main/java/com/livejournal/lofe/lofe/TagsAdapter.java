@@ -9,6 +9,8 @@ import android.widget.SimpleCursorAdapter;
 
 import java.util.ArrayList;
 
+import static com.livejournal.lofe.lofe.DBHelper.*;
+
 public class TagsAdapter extends SimpleCursorAdapter {
 
     protected ChTag[] chTags;
@@ -39,7 +41,7 @@ public class TagsAdapter extends SimpleCursorAdapter {
             chTags = new ChTag[c.getCount()];
             c.moveToFirst();
             for (int i = 0; i < c.getCount(); i++) {
-                chTags[i] = new ChTag(false, c.getLong(c.getColumnIndex(DB.TAG_COLUMN_ID)));
+                chTags[i] = new ChTag(false, c.getLong(c.getColumnIndex(TAG_COLUMN_ID)));
                 c.moveToNext();
             }
         }

@@ -4,28 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-//import android.support.v4.app.FragmentActivity;
-//import android.support.v4.app.LoaderManager.LoaderCallbacks;
-//import android.support.v4.content.CursorLoader;
-//import android.support.v4.content.Loader;
-//import android.support.v4.widget.SimpleCursorAdapter;
-import android.text.Layout;
-import android.view.ContextMenu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.app.LoaderManager;
@@ -37,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.livejournal.lofe.lofe.DBHelper.*;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 
 // TODO эту активити и соотв слой переименовать, сортировка не только по ярлыкам
@@ -53,10 +41,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     DB db;
     long msStartTime;   // Момент времени, с которого будем отображать ярлыки
 
-    long[] idTags = {0};
-
     TagsAdapter tagsAdapter;
-    SimpleCursorAdapter scAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,23 +76,17 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         tvDate.setOnClickListener(this);
 
         GregorianCalendar calendar = (GregorianCalendar) GregorianCalendar.getInstance();
-        //Date date = calendar.getTime();
         msStartTime = calendar.getTimeInMillis();
         tvDate.setText("" + new SimpleDateFormat("dd.MM.yy").format(new Date(msStartTime)));
 
-        db = new DB(this);                                                                          // открываем подключение к БД
-        db.open();
-
-        String[] from = new String[] { DB.TAG_COLUMN_NAME, DB.TAG_COLUMN_ID };                      // формируем столбцы сопоставления
+        String[] from = new String[] { TAG_COLUMN_NAME, TAG_COLUMN_ID };                      // формируем столбцы сопоставления
         int[] to = new int[] { R.id.tvTag2Text, R.id.cbTag2Checked};
 
         tagsAdapter = new TagsAdapter(this, R.layout.item_tag2, null, from, to, 0);                 // создааем адаптер и настраиваем список
         gvTags = findViewById(R.id.gvDialogTags);
         gvTags.setAdapter(tagsAdapter);
 
-        tagsAdapter.swapCursor(db.getAllTag());
-
-        //getSupportLoaderManager().initLoader(0, null, this);                                        // создаем лоадер для чтения данных
+        tagsAdapter.swapCursor(getAllTag());
     }
 
     public void onClick(View v) {
@@ -115,11 +94,6 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
         RecordsSortParams sortParams;
         switch (v.getId()) {
             case R.id.tvDate_aChooseTags:
-                //Toast.makeText(this, "На дату нажимается", Toast.LENGTH_SHORT).show();
-                intent = new Intent(this, AlarmActivity.class);
-                startActivityForResult(intent, 1);
-                break;
-            case R.id.btnChooseTagsMap:
                 intent = new Intent(this, AlarmActivity.class);
                 startActivityForResult(intent, 1);
                 break;
@@ -140,20 +114,15 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
                 tagsAdapter.setAllTags();
                 break;
             case R.id.btnChooseTagsDialogOrderByDate:
-                db.close();
                 sortParams = new RecordsSortParams(true); // TODO задефайнить
-                //sortParams.sortByIncTime = true;
                 intent = new Intent(this, ChooseTagsActivity.class);
                 intent.putExtra(RecordsSortParams.class.getCanonicalName(), sortParams);
                 log("sort param3");
-                //intent = new Intent();
-                //intent.p
                 setResult(RESULT_OK, intent);
                 finish();
                 break;
 
             case R.id.btnChooseTagsDialogOk:
-                db.close();
                 ArrayList<Integer> chTaags = tagsAdapter.getCheckedTags();
                 intent = new Intent();
                 if (chTaags.size() > 0)
@@ -191,7 +160,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         //return new Loader<Cursor>(this, db);
-        return new Loader<Cursor>(this);
+        return new Loader<>(this);
     }
 
     @Override
@@ -203,23 +172,7 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
     public void onLoaderReset(Loader<Cursor> loader) {
     }
 
-    static class MyCursorLoader extends CursorLoader {
-
-        DB db;
-
-        public MyCursorLoader(Context context, DB db) {
-            super(context);
-            this.db = db;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            return db.getAllTag();
-        }
-    }
-
     protected void onDestroy() {
         super.onDestroy();
-        db.close();
     }
 }

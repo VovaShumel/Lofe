@@ -3,19 +3,18 @@ package com.livejournal.lofe.lofe;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import static com.livejournal.lofe.lofe.DBHelper.*;
+
 public class AddEditTagActivity extends Activity implements View.OnClickListener {
 
     EditText etTagText;
     ImageButton ibOk;
-    ImageButton ibCncl;
     long id;
-    DB db;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,13 +23,10 @@ public class AddEditTagActivity extends Activity implements View.OnClickListener
         Intent intent = getIntent();
         id = intent.getLongExtra("id", 0);
 
-        ibOk = (ImageButton) findViewById(R.id.imgBtnOkEdtTag);
+        ibOk = findViewById(R.id.imgBtnOkEdtTag);
         ibOk.setOnClickListener(this);
 
-        db = new DB(this);
-        db.open();
-
-        etTagText = (EditText) findViewById(R.id.etTagName);
+        etTagText = findViewById(R.id.etTagName);
 
         if (id != 0) {   // редактирование записи
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);   // Чтобы автоматически не отображалась
@@ -49,7 +45,7 @@ public class AddEditTagActivity extends Activity implements View.OnClickListener
                     if (id > 0) {
                         //db.edtRecordText(s, id);
                     } else {
-                        db.addTag(s);
+                        addTag(s);
                     }
                 } else {
                     if (id > 0) {
@@ -58,8 +54,6 @@ public class AddEditTagActivity extends Activity implements View.OnClickListener
                 }
                 break;
         }
-
-        db.close();
 
         Intent intent = new Intent(this, AddEditRecordActivity.class);
         intent.putExtra("id", 0);

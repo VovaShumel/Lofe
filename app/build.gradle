@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.livejournal.lofe.lofe"
-        minSdkVersion 16
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -18,8 +18,8 @@ android {
     }
     buildToolsVersion = '28.0.3'
     compileOptions {
-        sourceCompatibility = 1.7
-        targetCompatibility = 1.7
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
     }
 }
 

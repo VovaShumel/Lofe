@@ -7,13 +7,14 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
+
+import com.livejournal.lofe.lofe.model.LofeRecord;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,13 +31,12 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
     float x, y;
     TextView tvX, tvY;
     ImageView ivClock;
-    Button btSetAlarm;
     CheckBox cbAlarmEnabled, cbNotificationEnabled;
     long PressTime = 0;
     long recordId;
     AlarmManager alarmManager;
-    PendingIntent pendingIntent;
     Long ms = null;
+    LofeRecord record;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,15 +44,13 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
         Intent intent = getIntent();
         recordId = intent.getLongExtra("recordId", 0L);
-        log("AlarmActivity onCreate recordId = " + recordId);
+        record = intent.getParcelableExtra("RECORD");
 
         tvX = findViewById(R.id.textView);
         tvY = findViewById(R.id.textView2);
 
         ivClock = findViewById(R.id.iView);
         ivClock.setOnTouchListener(this);
-
-        btSetAlarm = findViewById(R.id.buttonSetAlarm);
 
         cbAlarmEnabled = findViewById(R.id.cbSetAlarm_aSetAlarm);
         cbNotificationEnabled = findViewById(R.id.cbSetNotification_aSetAlarm);
@@ -61,36 +59,30 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
         final CalendarView calendarView = findViewById(R.id.calendarView);
 
-        btSetAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // REFACT удалить это после отладки основного
-                Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 10000, pendingIntent);
-            }
-        });
+//        btSetAlarm.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // REFACT удалить это после отладки основного
+//                Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+//                pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                alarmManager.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 10000, pendingIntent);
+//            }
+//        });
 
-        calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
 
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year,
-                                            int month, int dayOfMonth) {
-
-                SimpleDateFormat smf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                try {
-                    month += 1;
-                    ms = smf.parse("" + dayOfMonth + "/" + month + "/" + year + " 00:00:00").getTime();
-                    ms += TimeZone.getDefault().getRawOffset();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            SimpleDateFormat smf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            try {
+                month += 1;
+                ms = smf.parse("" + dayOfMonth + "/" + month + "/" + year + " 00:00:00").getTime();
+                ms += TimeZone.getDefault().getRawOffset();
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         });
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
-
         super.onWindowFocusChanged(hasFocus);
 
         if(hasFocus)
@@ -147,6 +139,7 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
                         calendar.set(Calendar.HOUR_OF_DAY, h);
                         calendar.set(Calendar.MINUTE, m);
+                        calendar.set(Calendar.SECOND, 0);
 
                         if ((curH > h) || ((curH == h) && (curM > m)))
                             calendar.add(Calendar.DAY_OF_YEAR, 1);
@@ -162,18 +155,22 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
                         }
                     }
 
-                    Intent intent = new Intent().putExtra("ms", ms);
+                    Intent intent = new Intent();
+                    //intent.putExtra("ms", ms);//REFACT удалить после отладки правильного
+                    record.setTime(ms);
+                    record.setIsAlarmEnabled(cbAlarmEnabled.isChecked());
+                    intent.putExtra("RECORD", record);
                     setResult(RESULT_OK, intent);
 
-                    if (cbAlarmEnabled.isChecked()) {
-                        intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-                        intent.putExtra("recordId", recordId);
-                        log("AlarmActivity recordId = " + recordId);
-
-                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, ms, pendingIntent);
-                    }
+//                    if (cbAlarmEnabled.isChecked()) {// REFACT удалить после отладки правильного
+//                        intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+//                        intent.putExtra("recordId", recordId);
+//                        log("AlarmActivity recordId = " + recordId);
+//
+//                        pendingIntent = PendingIntent.getBroadcast(AlarmActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//                        alarmManager.set(AlarmManager.RTC_WAKEUP, ms, pendingIntent);
+//                    }
 
                     finish();
                     break;

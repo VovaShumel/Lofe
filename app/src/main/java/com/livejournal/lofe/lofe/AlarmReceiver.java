@@ -1,14 +1,23 @@
 package com.livejournal.lofe.lofe;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.livejournal.lofe.lofe.model.Alarm;
+
+import java.util.List;
+
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static android.content.Context.ALARM_SERVICE;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -44,5 +53,43 @@ public class AlarmReceiver extends BroadcastReceiver {
         _intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         _intent.putExtra("recordId", recordId);
         context.getApplicationContext().startActivity(_intent);
+    }
+
+    public static void setReminderAlarm(Context context, Alarm alarm) {
+        final Intent intent = new Intent(context, AlarmReceiver.class);
+        intent.putExtra("recordId", alarm.getId());
+
+        final PendingIntent pIntent = PendingIntent.getBroadcast(
+                context,
+                alarm.notificationId(),// TODO одно напоминание не затрёт другое, если будет назначено на то же время?
+                intent,
+                FLAG_UPDATE_CURRENT
+        );
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+
+        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, alarm.getTime(), pIntent);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, alarm.getTime(), pIntent);
+
+        //ScheduleAlarm.with(context).schedule(alarm, pIntent);
+    }
+
+    public static void setReminderAlarms(Context context, List<Alarm> alarms) {
+        for(Alarm alarm : alarms)
+            setReminderAlarm(context, alarm);
+    }
+
+    public static void cancelReminderAlarm(Context context, Alarm alarm) {
+
+        final Intent intent = new Intent(context, AlarmReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(
+                context,
+                alarm.notificationId(),
+                intent,
+                FLAG_UPDATE_CURRENT
+        );
+
+        final AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pIntent);
     }
 }

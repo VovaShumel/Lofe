@@ -29,13 +29,6 @@
         android:layout_gravity="top"
         android:src="@drawable/clock_7" />
 
-    <Button
-        android:id="@+id/buttonSetAlarm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="@string/btnName_test" />
-
     <CheckBox
         android:id="@+id/cbSetNotification_aSetAlarm"
         android:layout_gravity="bottom|center"
@@ -45,7 +38,7 @@
 
     <CheckBox
         android:id="@+id/cbSetAlarm_aSetAlarm"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="bottom|start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Alarm" />

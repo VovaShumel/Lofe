@@ -9,6 +9,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
+import com.livejournal.lofe.lofe.model.LofeRecord;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +47,7 @@ public class RecordAutoCompleteAdapter extends BaseAdapter implements Filterable
             convertView = inflater.inflate(R.layout.dropdown_record_item, parent, false);
         }
         LofeRecord record = getItem(position);
-        ((TextView) convertView.findViewById(R.id.dropdownListItemRecordText)).setText(LofeRecord.getText());
+        ((TextView) convertView.findViewById(R.id.dropdownListItemRecordText)).setText(record.getText());
 
         return convertView;
     }
