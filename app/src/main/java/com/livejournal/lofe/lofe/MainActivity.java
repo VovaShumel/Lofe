@@ -129,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 intent1.putExtra("tagId", tagId);
                 intent1.putExtra("position", position);
                 startActivity(intent1);
-                //startActivityForResult(intent, 1);
             }
         });
 

@@ -136,12 +136,10 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     static LofeRecord getRecord(long id) {
-        Cursor c = d().rawQuery("SELECT * FROM " + TAG_TABLE + " WHERE " + R_COLUMN_ID + " = " + id, null);
+        Cursor c = d().rawQuery("SELECT * FROM " + RECORD_TABLE + " WHERE " + R_COLUMN_ID + " = " + id, null);
         if (c == null) return null;
         c.moveToFirst();
-        LofeRecord r = new LofeRecord(id, c.getString(1), c.getLong(2));
-        if (!c.isNull(3))
-            r.setIsAlarmEnabled(c.getLong(3) > 0);
+        LofeRecord r = new LofeRecord(id, c.getString(1), c.getLong(2), c.getLong(3));
         c.close();
         return r;
     }
