@@ -18,6 +18,7 @@ import java.util.List;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 import static android.content.Context.ALARM_SERVICE;
+import static com.livejournal.lofe.lofe.DBHelper.getRecordText;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -33,14 +34,17 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         Intent notificationIntent = new Intent(context, AlarmReceiver.class);
         PendingIntent contentIntent = PendingIntent.getBroadcast(context,
-                0, notificationIntent,
+                //0,
+                (int)recordId,
+                notificationIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentIntent(contentIntent)
                 .setSmallIcon(R.drawable.icon)
                 .setContentTitle("Напоминание")
-                .setContentText("Купить клей")
+                //.setContentText("Купить клей")
+                .setContentText(getRecordText(recordId))
                 .setTicker("Обязательно!!!")
                 .setAutoCancel(true);
 
