@@ -52,6 +52,31 @@
         android:layout_height="wrap_content"
         android:id="@+id/etRecordText" />
 
+    <RadioGroup
+        android:id="@+id/AddEditRecord_RG_NeedCan"
+        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etRecordText"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/AddEditRecord_RG_NeedCan_rbNeed"
+            android:layout_marginLeft="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/Need" />
+
+        <RadioButton
+            android:id="@+id/AddEditRecord_RG_NeedCan_rbCan"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Can" />
+    </RadioGroup>
+
     <SeekBar
         android:id="@+id/sbPriority"
         android:layout_marginLeft="20dp"

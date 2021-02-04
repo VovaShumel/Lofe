@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     int position;
     Boolean disallowBack;
     LofeRecord record;
+    RadioButton rbNeed, rbCan;
 
     Tags2Adapter scAdapter;
 
@@ -74,12 +76,20 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
         etRecordText = findViewById(R.id.etRecordText);
 
+        rbNeed = findViewById(R.id.AddEditRecord_RG_NeedCan_rbNeed);
+        rbCan = findViewById(R.id.AddEditRecord_RG_NeedCan_rbCan);
+
         if (recordId > 0) {                                                                               // редактирование записи
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);       // Чтобы автоматически не отображалась
                                                                                                     // клавиатура с фокусом ввода в etRecordText
             etRecordText.setText(getRecordText(recordId)); // TODO совместить эти действия в одно
             //SetDateText(getRecordDate(recordId));REFACT удалить после проверки нового
             record = getRecord(recordId);
+            if (record.isNeed())
+                rbNeed.setChecked(true);
+            else
+                rbCan.setChecked(true);
+
             log("Зашли в ветку по recordId > 0, и record.time=" + record.getTime());
         } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
             //tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
@@ -155,6 +165,10 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                         edtRecordDate(recordId, ms);
 
                     edtRecordPriority(recordId, showedPriority);
+
+                    // REFACT вместо отдельных записей выше и ниже подготовить сначала record а потом записать её?
+
+                    //edtRecordNeeding(recordId, rbNeed.isChecked()); TODO реализовать это
 
                     ArrayList<ChTag> chTags = scAdapter.getChTags();
                     for(int i = 0; i < chTags.size(); i++)

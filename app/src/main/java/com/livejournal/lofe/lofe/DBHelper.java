@@ -30,6 +30,7 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String R_COLUMN_ALARM_ENABLED = "alarm_enabled";
     // PRECEDENT_ACTION
     // NEXT_ACTION
+    private static final String R_COLUMN_ATTRIBUTES = "attributes";
 
     private static final String TAG_TABLE = "TAG";
     public static final String TAG_COLUMN_ID = "_id";
@@ -139,7 +140,10 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor c = d().rawQuery("SELECT * FROM " + RECORD_TABLE + " WHERE " + R_COLUMN_ID + " = " + id, null);
         if (c == null) return null;
         c.moveToFirst();
-        LofeRecord r = new LofeRecord(id, c.getString(1), c.getLong(2), c.getLong(3));
+        LofeRecord r = new LofeRecord(id,
+                                      c.getString(1),
+                                      c.getLong(2),
+                                      c.getLong(c.getColumnIndex(R_COLUMN_ATTRIBUTES)));
         c.close();
         return r;
     }
@@ -185,6 +189,15 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(TAG_COLUMN_NAME, tag_name);
         d().insert(TAG_TABLE, null, cv);
+    }
+
+    // редактировать запись в RECORD_TABLE
+    static void edtRecord(LofeRecord record) {
+        ContentValues cv = new ContentValues();
+        cv.put(R_COLUMN_TEXT, record.getText());
+        cv.put(R_COLUMN_TEXT, record.getAttributes());
+        // TODO добавить остальное
+        d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {Long.toString(record.getId())});
     }
 
     // редактировать запись в RECORD_TABLE

@@ -23,7 +23,7 @@
     <RelativeLayout
         android:id="@+id/ChooseTagsSortingOptionsLayout"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="250dp"
         android:layout_weight="1">
 
         <Button
@@ -32,11 +32,53 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="2dp"
-            android:text="@string/BtnCollapse" />
+            android:text="@string/BtnExpand" />
+
+        <View
+            android:id="@+id/dividerTop"
+            android:layout_below="@id/btnChooseTagsExpandCollapse"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="?android:attr/listDivider" />
+
+        <RadioGroup
+            android:id="@+id/RG_NeedCan"
+            android:layout_marginTop="4dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dividerTop"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbNeed"
+                android:layout_marginLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/Need" />
+
+            <RadioButton
+                android:id="@+id/rbCan"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Can" />
+
+            <RadioButton
+                android:id="@+id/rbNeedCan"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/All" />
+
+        </RadioGroup>
 
         <View
             android:id="@+id/divider"
-            android:layout_below="@id/btnChooseTagsExpandCollapse"
+            android:layout_below="@id/RG_NeedCan"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_margin="10dp"

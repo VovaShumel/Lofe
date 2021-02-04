@@ -7,6 +7,8 @@ public final class LofeRecord implements Parcelable {
 
     private static final long MASK_ALARM_ENABLED = 1;
 
+    private static final long MASK_IS_NEED = 1;
+
     private LofeRecord(Parcel in) {
         id = in.readLong();
         text = in.readString();
@@ -65,12 +67,21 @@ public final class LofeRecord implements Parcelable {
     //private SparseBooleanArray allDays;
     //private boolean isAlarmEnabled;
     private long alarmSettings;
+    private long attributes;
 
     public LofeRecord(long id, String text, long time, long alarmSettings) {
         this.id = id;
         this.text = text;
         this.time = time;
         this.alarmSettings = alarmSettings;
+    }
+
+    public LofeRecord(long id, String text, long time, long alarmSettings, long attributes) {
+        this.id = id;
+        this.text = text;
+        this.time = time;
+        this.alarmSettings = alarmSettings;
+        this.attributes = attributes;
     }
 
     public LofeRecord(long id, String text, long time) {
@@ -111,6 +122,10 @@ public final class LofeRecord implements Parcelable {
         return text;
     }
 
+    public long getAttributes() {
+        return attributes;
+    }
+
     public void setIsAlarmEnabled(boolean isAlarmEnabled) {
         if (isAlarmEnabled)
             alarmSettings |= MASK_ALARM_ENABLED;
@@ -124,6 +139,10 @@ public final class LofeRecord implements Parcelable {
 
     public Alarm getAlarm() {
         return new Alarm(getId(), getTime(), isAlarmEnabled());
+    }
+
+    public boolean isNeed() {
+        return (attributes & MASK_IS_NEED) > 0;
     }
 
     @Override

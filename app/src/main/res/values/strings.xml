@@ -49,5 +49,8 @@
     <string name="strDescr_TagImg">Изображение на ярлыке</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="Need">Нужно</string>
+    <string name="Can">Можно</string>
+    <string name="All">Все</string>
 
 </resources>

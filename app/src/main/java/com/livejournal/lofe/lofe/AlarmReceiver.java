@@ -1,11 +1,13 @@
 package com.livejournal.lofe.lofe;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Build;
 
 import androidx.annotation.RequiresApi;
@@ -23,7 +25,11 @@ import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    private static final int NOTIFY_ID = 101;
+    //private static final int NOTIFY_ID = 101;
+    // TODO итак, сейчас проблема в том, что при нажатии на уведомление появляется экран
+    // AlarmTriggeredActivity, но текста уведомления там нет
+    // и снова проигрывается мелодия. Так не должно быть, не нужно тут мелодии, просто нужно просмотреть текст уведомления
+    // и сделать с ним какие-то действия
     long recordId;
 
     @Override
@@ -33,6 +39,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         log("AlarmReceiver intent.getLongExtra(recordId = " + recordId);
 
         Intent notificationIntent = new Intent(context, AlarmReceiver.class);
+        notificationIntent.putExtra("recordId", recordId);
         PendingIntent contentIntent = PendingIntent.getBroadcast(context,
                 //0,
                 (int)recordId,
@@ -41,18 +48,21 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         builder.setContentIntent(contentIntent)
-                .setSmallIcon(R.drawable.icon)
-                .setContentTitle("Напоминание")
-                //.setContentText("Купить клей")
+                .setSmallIcon(R.drawable.icon_small)
+                //.setContentTitle("Напоминание")
                 .setContentText(getRecordText(recordId))
-                .setTicker("Обязательно!!!")
-                .setAutoCancel(true);
+                //.setTicker("Обязательно!!!")
+                .setLights(Color.YELLOW, 1000, 1000);
+                   //(R.raw.rington) //TODO задавать звук здесь!
+
+        //Notification notification = null;
+
+        //notification.Set
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(NOTIFY_ID, builder.build());
+        notificationManager.notify((int)recordId, builder.build());
 
-        Intent _intent = new Intent(context, AlarmTriggeredActivity.class);// TODO разобраться, зачем это нужно
-//        _intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent _intent = new Intent(context, AlarmTriggeredActivity.class);// Запускаем экран отображения текста уведомления
 //        context.getApplicationContext().startActivity(_intent);
         _intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         _intent.putExtra("recordId", recordId);

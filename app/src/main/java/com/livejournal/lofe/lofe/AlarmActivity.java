@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -37,6 +38,7 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
     AlarmManager alarmManager;
     Long ms = null;
     LofeRecord record;
+    Button bGoToAlarmTriggeredActivity;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,14 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
         cbAlarmEnabled = findViewById(R.id.cbSetAlarm_aSetAlarm);
         cbNotificationEnabled = findViewById(R.id.cbSetNotification_aSetAlarm);
+
+        bGoToAlarmTriggeredActivity = findViewById(R.id.bSetAlarm_testGoToAlarmTriggeredActivity);
+        bGoToAlarmTriggeredActivity.setOnClickListener(view -> {
+            Intent newIntent = new Intent(AlarmActivity.this, AlarmTriggeredActivity.class);
+            newIntent.putExtra("recordId", recordId);
+            newIntent.putExtra("disallowBack", true);
+            startActivity(newIntent);
+        });
 
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
