@@ -66,6 +66,7 @@ public final class LofeRecord implements Parcelable {
     private long time;
     //private SparseBooleanArray allDays;
     //private boolean isAlarmEnabled;
+    private long priority;
     private long alarmSettings;
     private long attributes;
 
@@ -76,12 +77,13 @@ public final class LofeRecord implements Parcelable {
         this.alarmSettings = alarmSettings;
     }
 
-    public LofeRecord(long id, String text, long time, long alarmSettings, long attributes) {
+    public LofeRecord(long id, String text, long time, long alarmSettings, long attributes, long priority) {
         this.id = id;
         this.text = text;
         this.time = time;
         this.alarmSettings = alarmSettings;
         this.attributes = attributes;
+        this.priority = priority;
     }
 
     public LofeRecord(long id, String text, long time) {
@@ -113,6 +115,8 @@ public final class LofeRecord implements Parcelable {
     public long getTime() {
         return time;
     }
+
+    public long getPriority() {return priority;}
 
     public void setText(String text) {
         this.text = text;

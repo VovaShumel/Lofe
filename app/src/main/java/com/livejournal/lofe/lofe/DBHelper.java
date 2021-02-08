@@ -95,7 +95,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // получить все данные из таблицы DB_TABLE
+    // получить все данные из таблицы DB_TABLE REFACT название метода не соответствует сути, переназвать или переделать вообще
     static Cursor getAllData(long msStartTime) {
         if (msStartTime == 0)
             return d().query(RECORD_TABLE, null, null, null, null, null, null);
@@ -112,7 +112,8 @@ public class DBHelper extends SQLiteOpenHelper {
                                     " WHERE " +
                                     RECORD_TABLE + "." + R_COLUMN_DATE + " < " + msStartTime +
                                     " OR " +
-                                    RECORD_TABLE + "." + R_COLUMN_DATE + " IS NULL;", null);
+                                    RECORD_TABLE + "." + R_COLUMN_DATE + " IS NULL" +
+                                    " ORDER BY " + R_COLUMN_PRIORITY + " DESC", null);
         }
     }
 
@@ -143,7 +144,9 @@ public class DBHelper extends SQLiteOpenHelper {
         LofeRecord r = new LofeRecord(id,
                                       c.getString(1),
                                       c.getLong(2),
-                                      c.getLong(c.getColumnIndex(R_COLUMN_ATTRIBUTES)));
+                                      c.getLong(c.getColumnIndex(R_COLUMN_ATTRIBUTES)),
+                                      0,
+                                      c.getLong(c.getColumnIndex(R_COLUMN_PRIORITY)));
         c.close();
         return r;
     }

@@ -90,14 +90,18 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
             else
                 rbCan.setChecked(true);
 
+            showedPriority = record.getPriority();
+
             log("Зашли в ветку по recordId > 0, и record.time=" + record.getTime());
         } else {                                                                                    // В новой записи, сразу должна появляться клавиатура,
             //tvDateTime.setTextColor(0);                                                             // фокус ввода — поле ввода текста записи
             //SetDateText(MyUtil.getCurTimeMS());REFACT удалить после проверки нового
             record = new LofeRecord(MyUtil.getCurTimeMS());
+            showedPriority = 10;
         }
 
         SetDateText(record.getTime());
+        sbPriority.setProgress((int)showedPriority);
 
         String[] from = new String[] { TAG_COLUMN_NAME, TAG_COLUMN_ID };                      // формируем столбцы сопоставления
         int[] to = new int[] { R.id.tvTag2Text, R.id.cbTag2Checked };
@@ -163,6 +167,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
 
                     if (ms != 0)
                         edtRecordDate(recordId, ms);
+
 
                     edtRecordPriority(recordId, showedPriority);
 
