@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import androidx.core.app.NotificationManagerCompat;
+
 import com.livejournal.lofe.lofe.model.Alarm;
 import com.livejournal.lofe.lofe.model.LofeRecord;
 
@@ -232,6 +234,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // удалить запись из RECORD_TABLE
     static void delRec(long id) {
+        NotificationManagerCompat.from(MyApplication.getContext()).cancel((int)id); // TODO вроде тут ошибка в том, что при увеличении id записи выше int будут удаляться
+                                                                                    // не те уведомления
         d().delete(RECORD_TABLE, R_COLUMN_ID + " = " + id, null);
     }
 

@@ -26,10 +26,6 @@ import static com.livejournal.lofe.lofe.MyUtil.log;
 public class AlarmReceiver extends BroadcastReceiver {
 
     //private static final int NOTIFY_ID = 101;
-    // TODO итак, сейчас проблема в том, что при нажатии на уведомление появляется экран
-    // AlarmTriggeredActivity, но текста уведомления там нет
-    // и снова проигрывается мелодия. Так не должно быть, не нужно тут мелодии, просто нужно просмотреть текст уведомления
-    // и сделать с ним какие-то действия
     long recordId;
 
     @Override
