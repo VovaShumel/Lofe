@@ -46,7 +46,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
         android:hint="@string/spaceStr"
-        android:inputType="textMultiLine"
+        android:inputType="textMultiLine|textCapSentences"
         android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
