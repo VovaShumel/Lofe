@@ -14,7 +14,7 @@ public final class LofeRecord implements Parcelable {
 
     private static final long MASK_ALARM_ENABLED = 1;
 
-    private static final long MASK_IS_NEED = 1;
+    private static final long MASK_IS_CAN = 1;
 
     private LofeRecord(Parcel in) {
         id = in.readLong();
@@ -105,6 +105,7 @@ public final class LofeRecord implements Parcelable {
         this.text = "";
         this.time = time;
         this.alarmSettings = 0;
+        this.priority = 10;
     }
 
     public long getId() {
@@ -124,6 +125,8 @@ public final class LofeRecord implements Parcelable {
     }
 
     public long getPriority() {return priority;}
+
+    public void setPriority(long priority) {this.priority = priority;}
 
     public void setText(String text) {
         this.text = text;
@@ -166,8 +169,15 @@ public final class LofeRecord implements Parcelable {
         setAlarm();
     }
 
-    public boolean isNeed() {
-        return (attributes & MASK_IS_NEED) > 0;
+    public boolean isNeed() {return !isCan();}
+
+    public boolean isCan() {return (attributes & MASK_IS_CAN) > 0;}
+
+    public void setCan(boolean isCan) {
+        if (isCan)
+            attributes |= MASK_IS_CAN;
+        else
+            attributes &= ~MASK_IS_CAN;
     }
 
     @Override

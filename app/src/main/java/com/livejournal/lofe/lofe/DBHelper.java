@@ -19,6 +19,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import static android.os.Environment.getExternalStorageDirectory;
+import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -29,10 +30,11 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String R_COLUMN_TEXT = "text";
     private static final String R_COLUMN_DATE = "alarm_date";
     private static final String R_COLUMN_PRIORITY = "PRIORITY";
-    private static final String R_COLUMN_ALARM_ENABLED = "alarm_enabled";
+    private static final String R_COLUMN_ALARM_SETTINGS = "alarm_enabled";
     // PRECEDENT_ACTION
     // NEXT_ACTION
     private static final String R_COLUMN_ATTRIBUTES = "attributes";
+    private static final String R_COLUMN_CREATION_DATE = "CREATE_DATE";
 
     private static final String TAG_TABLE = "TAG";
     public static final String TAG_COLUMN_ID = "_id";
@@ -112,10 +114,14 @@ public class DBHelper extends SQLiteOpenHelper {
             return d().rawQuery("SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
                                     " FROM " + RECORD_TABLE +
                                     " WHERE " +
+                                    "((" + R_COLUMN_ATTRIBUTES + " & 1) == 0) AND " +
+                                    "(" +
                                     RECORD_TABLE + "." + R_COLUMN_DATE + " < " + msStartTime +
                                     " OR " +
                                     RECORD_TABLE + "." + R_COLUMN_DATE + " IS NULL" +
-                                    " ORDER BY " + R_COLUMN_PRIORITY + " DESC", null);
+                                    ")" +
+                                    " ORDER BY " + R_COLUMN_PRIORITY + " DESC, "
+                                                 + R_COLUMN_CREATION_DATE + " DESC", null);
         }
     }
 
@@ -146,8 +152,8 @@ public class DBHelper extends SQLiteOpenHelper {
         LofeRecord r = new LofeRecord(id,
                                       c.getString(1),
                                       c.getLong(2),
+                                      c.getLong(c.getColumnIndex(R_COLUMN_ALARM_SETTINGS)),
                                       c.getLong(c.getColumnIndex(R_COLUMN_ATTRIBUTES)),
-                                      0,
                                       c.getLong(c.getColumnIndex(R_COLUMN_PRIORITY)));
         c.close();
         return r;
@@ -181,6 +187,7 @@ public class DBHelper extends SQLiteOpenHelper {
     static long addRecordText(String txt_record) {
         ContentValues cv = new ContentValues();
         cv.put(R_COLUMN_TEXT, txt_record);
+        cv.put(R_COLUMN_CREATION_DATE, getCurTimeMS());
         return d().insert(RECORD_TABLE, null, cv);
     }
 
@@ -197,21 +204,11 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // редактировать запись в RECORD_TABLE
-    static void edtRecord(LofeRecord record) {
-        ContentValues cv = new ContentValues();
-        cv.put(R_COLUMN_TEXT, record.getText());
-        cv.put(R_COLUMN_ATTRIBUTES, record.getAttributes());
-        // TODO добавить остальное
-        d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {Long.toString(record.getId())});
-    }
-
-    // редактировать запись в RECORD_TABLE
     static void edtRecordText(String txt_record, long id) {
         ContentValues cv = new ContentValues();
         cv.put(R_COLUMN_TEXT, txt_record);
         d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {id + ""});
     }
-
 
     static void edtRecordDate(long id, long msDate) {
         ContentValues cv = new ContentValues();
@@ -223,6 +220,16 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put(R_COLUMN_PRIORITY, priority);
         d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {id + ""});
+    }
+
+    // редактировать запись в RECORD_TABLE
+    static void edtRecord(LofeRecord record) {
+        ContentValues cv = new ContentValues();
+        //cv.put(R_COLUMN_TEXT, record.getText());
+        cv.put(R_COLUMN_PRIORITY, record.getPriority());
+        cv.put(R_COLUMN_ATTRIBUTES, record.getAttributes());
+        // TODO добавить остальное
+        d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {Long.toString(record.getId())});
     }
 
     // добавить запись в RECORD_TABLE
@@ -277,7 +284,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public static List<Alarm> getAlarms() {
         Cursor c = d().rawQuery("SELECT " + R_COLUMN_ID + ", " + R_COLUMN_DATE + " FROM " + RECORD_TABLE +
-                                " WHERE " + R_COLUMN_ALARM_ENABLED + " > 0", null);
+                                " WHERE " + R_COLUMN_ALARM_SETTINGS + " > 0", null);
 
         if (c == null) return new ArrayList<>();
 
