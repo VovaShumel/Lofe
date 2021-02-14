@@ -16,20 +16,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import java.util.ArrayList;
+import com.livejournal.lofe.lofe.model.LofeRecord;
+
+import java.text.SimpleDateFormat;
 
 import static com.livejournal.lofe.lofe.DBHelper.*;
-import static com.livejournal.lofe.lofe.MyUtil.getCurTimeMS;
-import static com.livejournal.lofe.lofe.MyUtil.log;
+import static com.livejournal.lofe.lofe.MyUtil.*;
 
 public class AlarmTriggeredActivity extends FragmentActivity implements View.OnDragListener {
 
     TextView tvRecordText;
     long recordId;
 
-    Button bDone;
+    Button bDone, bSetNewTime, bSetTimePlus5Min, bSetTimePlusHour, bSetTimeForTomorrow;
     ImageView ivTrash;
 
     boolean containsDragable = false;
@@ -49,9 +51,10 @@ public class AlarmTriggeredActivity extends FragmentActivity implements View.OnD
         tvRecordText = findViewById(R.id.TV_RecordText);
         tvRecordText.setText(getRecordText(recordId));
         tvRecordText.setOnClickListener(view -> {
-            Intent newIntent = new Intent(AlarmTriggeredActivity.this, AddEditRecordActivity.class);
-            newIntent.putExtra("recordId", recordId);
-            newIntent.putExtra("disallowBack", true);
+            Intent newIntent = new Intent(this, AddEditRecordActivity.class);
+            //newIntent.putExtra("recordId", recordId);
+            newIntent.putExtra("id", recordId);
+            //newIntent.putExtra("disallowBack", true);
             startActivity(newIntent);
         });
 //        tvRecordText.setOnTouchListener((view, motionEvent) -> {
@@ -78,6 +81,23 @@ public class AlarmTriggeredActivity extends FragmentActivity implements View.OnD
                 return false;
             }
         }); // TODO перенести потом обработчик на текст
+
+        bSetNewTime = findViewById(R.id.bForNewTime_aAlarmTriggered);
+        bSetNewTime.setOnClickListener(view -> {
+            Intent newIntent = new Intent(AlarmTriggeredActivity.this, AlarmActivity.class);
+            newIntent.putExtra("recordId", recordId);
+            newIntent.putExtra("SET_ALARM_IN_THIS_ACTIVITY", true);
+            startActivity(newIntent);
+        });
+
+        bSetTimePlus5Min = findViewById(R.id.bPlus5m_aAlarmTriggered);
+        bSetTimePlus5Min.setOnClickListener(view -> SetRecordAlarmToANewTimeAndExit(getCurTimeMS() + (5 * 60 * 1000)));
+
+        bSetTimePlusHour = findViewById(R.id.bPlusHour_aAlarmTriggered);
+        bSetTimePlusHour.setOnClickListener(view -> SetRecordAlarmToANewTimeAndExit(getCurTimeMS() + (60 * 60 * 1000)));
+
+        bSetTimeForTomorrow = findViewById(R.id.bForTomorrow_aAlarmTriggered);
+        bSetTimeForTomorrow.setOnClickListener(view -> SetRecordAlarmToANewTimeAndExit(getCurTimeMS() + (24 * 60 * 60 * 1000)));
 
         ivTrash = findViewById(R.id.ivAlarmTriggered_trash);
         ivTrash.setOnDragListener(this);
@@ -139,5 +159,16 @@ public class AlarmTriggeredActivity extends FragmentActivity implements View.OnD
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    private void SetRecordAlarmToANewTimeAndExit(long ms) {
+        edtRecordDate(recordId, ms);
+        NotificationManagerCompat.from(this).cancel((int) recordId);
+        LofeRecord record = getRecord(recordId);
+        record.setAlarm(true);
+        tat("Будильник установлен на " + new SimpleDateFormat("dd.MM.yy HH:mm").format(ms));
+        Intent newIntent = new Intent(AlarmTriggeredActivity.this, MainActivity.class);
+        newIntent.putExtra("disallowBack", true);
+        startActivity(newIntent);
     }
 }

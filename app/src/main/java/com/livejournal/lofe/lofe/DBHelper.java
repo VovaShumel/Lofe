@@ -200,7 +200,7 @@ public class DBHelper extends SQLiteOpenHelper {
     static void edtRecord(LofeRecord record) {
         ContentValues cv = new ContentValues();
         cv.put(R_COLUMN_TEXT, record.getText());
-        cv.put(R_COLUMN_TEXT, record.getAttributes());
+        cv.put(R_COLUMN_ATTRIBUTES, record.getAttributes());
         // TODO добавить остальное
         d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {Long.toString(record.getId())});
     }

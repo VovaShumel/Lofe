@@ -2,6 +2,7 @@ package com.livejournal.lofe.lofe;
 
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,7 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-class MyUtil {
+public class MyUtil {
 
     // Возвращает текущее время в мс для текущей локали
     static long getCurTimeMS() {
@@ -49,5 +50,10 @@ class MyUtil {
         }
         crs.close(); // close the cursor
         return arr.toString();
+    }
+
+    static void tat(String s) {
+        Toast toast = Toast.makeText(MyApplication.getContext(), s, Toast.LENGTH_LONG);
+        toast.show();
     }
 }

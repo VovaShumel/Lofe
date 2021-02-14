@@ -16,6 +16,7 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
@@ -188,6 +189,8 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                         AlarmReceiver.cancelReminderAlarm(this, alarm);
                         log("Будильник для записи " + recordId + " выключен");
                     }
+
+                    NotificationManagerCompat.from(this).cancel((int)recordId);
 
                 } else if (recordId > 0)
                     delRec(recordId);

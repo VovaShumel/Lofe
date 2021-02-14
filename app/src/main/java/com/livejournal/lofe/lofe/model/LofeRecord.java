@@ -3,6 +3,13 @@ package com.livejournal.lofe.lofe.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.livejournal.lofe.lofe.AlarmReceiver;
+import com.livejournal.lofe.lofe.MyApplication;
+
+import java.text.SimpleDateFormat;
+
+import static com.livejournal.lofe.lofe.MyUtil.*;
+
 public final class LofeRecord implements Parcelable {
 
     private static final long MASK_ALARM_ENABLED = 1;
@@ -143,6 +150,20 @@ public final class LofeRecord implements Parcelable {
 
     public Alarm getAlarm() {
         return new Alarm(getId(), getTime(), isAlarmEnabled());
+    }
+
+    public void setAlarm() {
+        Alarm alarm = getAlarm();
+
+        if (alarm.isEnabled())
+            AlarmReceiver.setReminderAlarm(MyApplication.getContext(), alarm);
+        else
+            AlarmReceiver.cancelReminderAlarm(MyApplication.getContext(), alarm);
+    }
+
+    public void setAlarm(boolean isAlarmEnabled) {
+        setIsAlarmEnabled(isAlarmEnabled);
+        setAlarm();
     }
 
     public boolean isNeed() {

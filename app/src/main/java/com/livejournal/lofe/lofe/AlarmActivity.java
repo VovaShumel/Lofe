@@ -13,8 +13,10 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import com.google.android.gms.common.internal.FallbackServiceBroker;
 import com.livejournal.lofe.lofe.model.LofeRecord;
 
 import java.text.ParseException;
@@ -25,7 +27,9 @@ import java.util.TimeZone;
 
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_UP;
+import static com.livejournal.lofe.lofe.DBHelper.getRecord;
 import static com.livejournal.lofe.lofe.MyUtil.log;
+import static com.livejournal.lofe.lofe.MyUtil.tat;
 
 public class AlarmActivity extends FragmentActivity implements View.OnTouchListener {
 
@@ -35,6 +39,7 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
     CheckBox cbAlarmEnabled, cbNotificationEnabled;
     long PressTime = 0;
     long recordId;
+    boolean setAlarmInThisActivity = false;
     AlarmManager alarmManager;
     Long ms = null;
     LofeRecord record;
@@ -46,7 +51,10 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
 
         Intent intent = getIntent();
         recordId = intent.getLongExtra("recordId", 0L);
+        setAlarmInThisActivity = intent.getBooleanExtra("SET_ALARM_IN_THIS_ACTIVITY", false);
         record = intent.getParcelableExtra("RECORD");
+        if (record == null)
+            record = getRecord(recordId);
 
         tvX = findViewById(R.id.textView);
         tvY = findViewById(R.id.textView2);
@@ -57,6 +65,7 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
         cbAlarmEnabled = findViewById(R.id.cbSetAlarm_aSetAlarm);
         cbNotificationEnabled = findViewById(R.id.cbSetNotification_aSetAlarm);
 
+        // DEBUG временно, для отладки
         bGoToAlarmTriggeredActivity = findViewById(R.id.bSetAlarm_testGoToAlarmTriggeredActivity);
         bGoToAlarmTriggeredActivity.setOnClickListener(view -> {
             Intent newIntent = new Intent(AlarmActivity.this, AlarmTriggeredActivity.class);
@@ -165,12 +174,22 @@ public class AlarmActivity extends FragmentActivity implements View.OnTouchListe
                         }
                     }
 
-                    Intent intent = new Intent();
                     //intent.putExtra("ms", ms);//REFACT удалить после отладки правильного
                     record.setTime(ms);
                     record.setIsAlarmEnabled(cbAlarmEnabled.isChecked());
-                    intent.putExtra("RECORD", record);
-                    setResult(RESULT_OK, intent);
+
+                    if (setAlarmInThisActivity) {
+                        NotificationManagerCompat.from(this).cancel((int)recordId); // Убираем уведомление из шторки
+                        record.setAlarm();
+                        tat("Будильник установлен на " + new SimpleDateFormat("dd.MM.yy HH:mm").format(record.getAlarm().getTime()));
+                        Intent newIntent = new Intent(AlarmActivity.this, MainActivity.class);
+                        newIntent.putExtra("disallowBack", true);
+                        startActivity(newIntent);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra("RECORD", record);
+                        setResult(RESULT_OK, intent);
+                    }
 
 //                    if (cbAlarmEnabled.isChecked()) {// REFACT удалить после отладки правильного
 //                        intent = new Intent(getApplicationContext(), AlarmReceiver.class);
