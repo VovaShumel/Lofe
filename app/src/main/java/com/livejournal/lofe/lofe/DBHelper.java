@@ -193,7 +193,15 @@ public class DBHelper extends SQLiteOpenHelper {
 
     // Получение всех ярлыков
     static Cursor getAllTag() {
-        return d().query(TAG_TABLE, null, null, null, null, null, null);
+        //return d().query(TAG_TABLE, null, null, null, null, null, null);
+
+        // Выдача ярлыков в порядке частоты их использования, начиная с самого используемого
+        return d().rawQuery("SELECT " + TAG_TABLE + "." + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME +
+                            " FROM " + TAG_TABLE +
+                            " LEFT JOIN (SELECT " + RECORD_TAG_COLUMN_TAG_ID + ", count(" + RECORD_TAG_COLUMN_TAG_ID + ") AS tag_id_count FROM " +
+                                                    RECORD_TAG_TABLE + " GROUP BY " + RECORD_TAG_COLUMN_TAG_ID + ")" +
+                            " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID +
+                            " ORDER BY tag_id_count DESC", null);
     }
 
     // Создать новый ярлык
