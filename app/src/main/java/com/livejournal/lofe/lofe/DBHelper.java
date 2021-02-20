@@ -135,14 +135,43 @@ public class DBHelper extends SQLiteOpenHelper {
                                 RECORD_TAG_COLUMN_TAG_ID + " = " + id_tag + ";", null);
     }
 
+    // получить записи, которым назначены заданные ярлыки
+    static Cursor getTagedRecords(ArrayList<Integer> ids) {
+//        String sql = "SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
+//              " FROM " + RECORD_TABLE + ", " + RECORD_TAG_TABLE +
+//              " WHERE " + RECORD_TABLE + "." + R_COLUMN_ID + " = " + RECORD_TAG_COLUMN_RECORD_ID;
+
+        String sql = "SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
+                     " FROM " + RECORD_TABLE + ", " + RECORD_TAG_TABLE +
+                     " WHERE " + RECORD_TABLE + "." + R_COLUMN_ID + " = " + RECORD_TAG_COLUMN_RECORD_ID + " AND " +
+                                 RECORD_TAG_COLUMN_TAG_ID + " IN (";
+
+        for (int i = 0; i < ids.size(); i++)
+            sql += ids.get(i) + ",";
+
+        return d().rawQuery(sql.substring(0, sql.length() - 1) + ") GROUP BY " + RECORD_TAG_COLUMN_RECORD_ID +
+                                                                     " HAVING count(" + RECORD_TAG_COLUMN_TAG_ID + ") = " + ids.size(), null);
+    }
+
     // получить список ярлыков, дающих record_id в соответствующем столбце для назначенных ярлыков
     // и NULL, если ярлык не назначен
+    // с сортировкой в порядке уменьшения встречаемости ярлыков в других ярлыках
     static Cursor getRecordTags(long id_record) {
+//        return d().rawQuery("SELECT " + TAG_TABLE + "." + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME + ", " + RECORD_TAG_COLUMN_RECORD_ID +
+//                                " FROM " + TAG_TABLE +
+//                                " LEFT JOIN " + RECORD_TAG_TABLE +
+//                                " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID +
+//                                " AND " + RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record, null);
+
         return d().rawQuery("SELECT " + TAG_TABLE + "." + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME + ", " + RECORD_TAG_COLUMN_RECORD_ID +
-                                " FROM " + TAG_TABLE +
-                                " LEFT JOIN " + RECORD_TAG_TABLE +
-                                " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID +
-                                " AND " + RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record, null);
+                " FROM " + TAG_TABLE +
+                " LEFT JOIN (SELECT " + RECORD_TAG_COLUMN_TAG_ID + ", " + RECORD_TAG_COLUMN_RECORD_ID +
+                                        ", count(" + RECORD_TAG_COLUMN_TAG_ID + ") AS tag_id_count FROM " +
+                                        RECORD_TAG_TABLE +
+                             " GROUP BY " + RECORD_TAG_COLUMN_TAG_ID + ")" +
+                " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID +
+                " AND " + RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record +
+                " ORDER BY tag_id_count DESC", null);
     }
 
     static LofeRecord getRecord(long id) {
@@ -280,12 +309,16 @@ public class DBHelper extends SQLiteOpenHelper {
         return d().insert(RECORD_TAG_TABLE, null, cv);
     }
 
-    static Cursor GetCursor(long id, long msStartTime, RecordsSortParams sortParams) {
+    //static Cursor GetCursor(long id, long msStartTime, RecordsSortParams sortParams) {
+    static Cursor GetCursor(ArrayList<Integer> ids, long msStartTime, RecordsSortParams sortParams) {
         Cursor cursor;
         if (sortParams != null)
             cursor = getRecords(sortParams);
+        else if (ids == null)
+            cursor = getAllData(msStartTime);
         else
-            cursor = (id == 0) ? getAllData(msStartTime) : getTagedRecord(id);
+            //cursor = (id == 0) ? getAllData(msStartTime) : getTagedRecord(id);
+            cursor = (ids.size() == 0) ? getAllData(msStartTime) : getTagedRecords(ids);
 
         return cursor;
     }

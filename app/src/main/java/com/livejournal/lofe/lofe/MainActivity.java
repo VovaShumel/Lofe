@@ -26,6 +26,8 @@ import androidx.loader.content.Loader;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
+
 import static com.livejournal.lofe.lofe.MyLog.d;
 import static com.livejournal.lofe.lofe.MyUtil.log;
 import static com.livejournal.lofe.lofe.DBHelper.*;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private static final int CM_DELETE_ID = 2;
     public ListView lvData;
     long tagId = 0L;
+    ArrayList<Integer> tagIds = null;
     long msStartTime;
     RecordsSortParams sortParams;
     int position = 0;
@@ -136,7 +139,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        RedrawItemsList(GetCursor(tagId, msStartTime, sortParams));
+        //RedrawItemsList(GetCursor(tagId, msStartTime, sortParams));
+        RedrawItemsList(GetCursor(tagIds, msStartTime, sortParams));
 
         //getSupportLoaderManager().initLoader(0, null, this);
 
@@ -187,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null) {return;}
+        if (data == null) return;
 
         RecordsSortParams newSortParams = data.getParcelableExtra(RecordsSortParams.class.getCanonicalName());
         if (newSortParams != null) {
@@ -195,13 +199,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             sortParams = newSortParams;
         } else {
             sortParams = null;
-            tagId = data.getLongExtra("tagId", 0);
+            //tagId = data.getLongExtra("tagId", 0);
+            tagIds = data.getIntegerArrayListExtra("tagIds");
             msStartTime = data.getLongExtra("msStartTime", 0);
             //log("При возвращении из сортировки ярлыков получили " + msStartTime + " мс");
         }
         //getSupportLoaderManager().restartLoader(0, null, this);
         //getSupportLoaderManager().getLoader(0).forceLoad();
-        RedrawItemsList(GetCursor(tagId, msStartTime, sortParams));
+        //RedrawItemsList(GetCursor(tagId, msStartTime, sortParams));
+        RedrawItemsList(GetCursor(tagIds, msStartTime, sortParams));
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -231,7 +237,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return super.onContextItemSelected(item);
         }
         //getSupportLoaderManager().getLoader(0).forceLoad();     // получаем новый курсор с данными
-        RedrawItemsList(GetCursor(tagId, msStartTime, sortParams));
+        //RedrawItemsList(GetCursor(tagId, msStartTime, sortParams));
+        RedrawItemsList(GetCursor(tagIds, msStartTime, sortParams));
         return true;
     }
 

@@ -125,10 +125,14 @@ public class ChooseTagsActivity extends FragmentActivity implements View.OnClick
             case R.id.btnChooseTagsDialogOk:
                 ArrayList<Integer> chTaags = tagsAdapter.getCheckedTags();
                 intent = new Intent();
-                if (chTaags.size() > 0)
-                    intent.putExtra("tagId", chTaags.get(0));
-                else
-                    intent.putExtra("tagId", 0);
+
+                intent.putIntegerArrayListExtra("tagIds", chTaags);
+//                if (chTaags.size() > 1) {
+//                    intent.putIntegerArrayListExtra("tagIds", chTaags);
+//                } else if (chTaags.size() > 0)
+//                    intent.putExtra("tagId", chTaags.get(0));
+//                else
+//                    intent.putExtra("tagId", 0);
 
                 if (cbApplyTime.isChecked())                            // Ярлыки отображать с учётом времени?
                     intent.putExtra("msStartTime", msStartTime);
