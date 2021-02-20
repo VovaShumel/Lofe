@@ -167,15 +167,15 @@ public class DBHelper extends SQLiteOpenHelper {
         // далее выбираются ярлыки по частоте использования
         // и затем делается объединённая выборка по этим с сортировкой по частоте использования ярлыков
         // Подтормаживает, можно ли ускорить?
-        return d().rawQuery("SELECT " + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME + ", " + RECORD_TAG_COLUMN_RECORD_ID +
-                " FROM (SELECT " + TAG_TABLE + "." + TAG_COLUMN_ID + " AS " + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME + ", " + RECORD_TAG_COLUMN_RECORD_ID +
+        return d().rawQuery("SELECT " + TAG_COLUMN_ID + "," + TAG_COLUMN_NAME + "," + RECORD_TAG_COLUMN_RECORD_ID +
+                " FROM (SELECT " + TAG_TABLE + "." + TAG_COLUMN_ID + " AS " + TAG_COLUMN_ID + "," + TAG_COLUMN_NAME + "," + RECORD_TAG_COLUMN_RECORD_ID +
                         " FROM " + TAG_TABLE + " LEFT JOIN " + RECORD_TAG_TABLE +
-                        " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID + " AND " +
-                                 RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record + ")" +
+                        " ON " + RECORD_TAG_COLUMN_TAG_ID + "=" + TAG_TABLE + "." + TAG_COLUMN_ID + " AND " +
+                                 RECORD_TAG_COLUMN_RECORD_ID + "=" + id_record + ")" +
                 " JOIN (SELECT " + RECORD_TAG_COLUMN_TAG_ID + ", count(" + RECORD_TAG_COLUMN_TAG_ID + ") AS tag_id_count " +
                         "FROM " + RECORD_TAG_TABLE + " GROUP BY " + RECORD_TAG_COLUMN_TAG_ID + ")" +
-                " ON " + TAG_COLUMN_ID + " = " + RECORD_TAG_COLUMN_TAG_ID +
-                " ORDER BY tag_id_count DESC", null);
+                " ON " + TAG_COLUMN_ID + "=" + RECORD_TAG_COLUMN_TAG_ID +
+                " ORDER BY " + RECORD_TAG_COLUMN_RECORD_ID + " DESC," + "tag_id_count DESC", null);
     }
 
     static LofeRecord getRecord(long id) {
