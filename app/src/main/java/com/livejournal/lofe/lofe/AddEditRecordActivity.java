@@ -299,13 +299,10 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
             if (ms != 0)
                 edtRecordDate(recordId, ms);
 
-            //edtRecordPriority(recordId, showedPriority);
-
             // REFACT вместо отдельных записей выше и ниже подготовить сначала record а потом записать её?
 
             record.setCan(rbCan.isChecked());
             edtRecord(record);
-            //edtRecordNeeding(recordId, rbNeed.isChecked()); TODO реализовать это
 
             ArrayList<ChTag> chTags = scAdapter.getChTags();
             for(int i = 0; i < chTags.size(); i++)

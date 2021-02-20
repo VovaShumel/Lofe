@@ -135,7 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
                                 RECORD_TAG_COLUMN_TAG_ID + " = " + id_tag + ";", null);
     }
 
-    // получить записи, которым назначены заданные ярлыки
+    // получить записи, которым назначены все заданные ярлыки из списка
     static Cursor getTagedRecords(ArrayList<Integer> ids) {
 //        String sql = "SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
 //              " FROM " + RECORD_TABLE + ", " + RECORD_TAG_TABLE +
@@ -163,14 +163,18 @@ public class DBHelper extends SQLiteOpenHelper {
 //                                " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID +
 //                                " AND " + RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record, null);
 
-        return d().rawQuery("SELECT " + TAG_TABLE + "." + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME + ", " + RECORD_TAG_COLUMN_RECORD_ID +
-                " FROM " + TAG_TABLE +
-                " LEFT JOIN (SELECT " + RECORD_TAG_COLUMN_TAG_ID + ", " + RECORD_TAG_COLUMN_RECORD_ID +
-                                        ", count(" + RECORD_TAG_COLUMN_TAG_ID + ") AS tag_id_count FROM " +
-                                        RECORD_TAG_TABLE +
-                             " GROUP BY " + RECORD_TAG_COLUMN_TAG_ID + ")" +
-                " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID +
-                " AND " + RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record +
+        // Сначала делается выборка данных о всех ярлыках, среди которых отмечены выбранные для данной записи
+        // далее выбираются ярлыки по частоте использования
+        // и затем делается объединённая выборка по этим с сортировкой по частоте использования ярлыков
+        // Подтормаживает, можно ли ускорить?
+        return d().rawQuery("SELECT " + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME + ", " + RECORD_TAG_COLUMN_RECORD_ID +
+                " FROM (SELECT " + TAG_TABLE + "." + TAG_COLUMN_ID + " AS " + TAG_COLUMN_ID + ", " + TAG_COLUMN_NAME + ", " + RECORD_TAG_COLUMN_RECORD_ID +
+                        " FROM " + TAG_TABLE + " LEFT JOIN " + RECORD_TAG_TABLE +
+                        " ON " + RECORD_TAG_COLUMN_TAG_ID + " = " + TAG_TABLE + "." + TAG_COLUMN_ID + " AND " +
+                                 RECORD_TAG_COLUMN_RECORD_ID + " = " + id_record + ")" +
+                " JOIN (SELECT " + RECORD_TAG_COLUMN_TAG_ID + ", count(" + RECORD_TAG_COLUMN_TAG_ID + ") AS tag_id_count " +
+                        "FROM " + RECORD_TAG_TABLE + " GROUP BY " + RECORD_TAG_COLUMN_TAG_ID + ")" +
+                " ON " + TAG_COLUMN_ID + " = " + RECORD_TAG_COLUMN_TAG_ID +
                 " ORDER BY tag_id_count DESC", null);
     }
 
