@@ -172,7 +172,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         " FROM " + TAG_TABLE + " LEFT JOIN " + RECORD_TAG_TABLE +
                         " ON " + RECORD_TAG_COLUMN_TAG_ID + "=" + TAG_TABLE + "." + TAG_COLUMN_ID + " AND " +
                                  RECORD_TAG_COLUMN_RECORD_ID + "=" + id_record + ")" +
-                " JOIN (SELECT " + RECORD_TAG_COLUMN_TAG_ID + ", count(" + RECORD_TAG_COLUMN_TAG_ID + ") AS tag_id_count " +
+                " LEFT JOIN (SELECT " + RECORD_TAG_COLUMN_TAG_ID + ", count(" + RECORD_TAG_COLUMN_TAG_ID + ") AS tag_id_count " +
                         "FROM " + RECORD_TAG_TABLE + " GROUP BY " + RECORD_TAG_COLUMN_TAG_ID + ")" +
                 " ON " + TAG_COLUMN_ID + "=" + RECORD_TAG_COLUMN_TAG_ID +
                 " ORDER BY " + RECORD_TAG_COLUMN_RECORD_ID + " DESC," + "tag_id_count DESC", null);
@@ -216,7 +216,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return l;
     }
 
-    // добавить запись в RECORD_TABLE
+    // добавить запись в RECORD_TABLE REFACT назвать соответственно функциоаналу
     static long addRecordText(String txt_record) {
         ContentValues cv = new ContentValues();
         cv.put(R_COLUMN_TEXT, txt_record);
@@ -257,12 +257,6 @@ public class DBHelper extends SQLiteOpenHelper {
         d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {id + ""});
     }
 
-    static void edtRecordPriority(long id, long priority) {
-        ContentValues cv = new ContentValues();
-        cv.put(R_COLUMN_PRIORITY, priority);
-        d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {id + ""});
-    }
-
     // редактировать запись в RECORD_TABLE
     static void edtRecord(LofeRecord record) {
         ContentValues cv = new ContentValues();
@@ -271,13 +265,6 @@ public class DBHelper extends SQLiteOpenHelper {
         cv.put(R_COLUMN_ATTRIBUTES, record.getAttributes());
         // TODO добавить остальное
         d().update(RECORD_TABLE, cv, R_COLUMN_ID + " = ?", new String[] {Long.toString(record.getId())});
-    }
-
-    // добавить запись в RECORD_TABLE
-    static void addRec(String txt_record, String txt_date) {
-        ContentValues cv = new ContentValues();
-        cv.put(R_COLUMN_TEXT, txt_record);
-        d().insert(RECORD_TABLE, null, cv);
     }
 
     // удалить запись из RECORD_TABLE
