@@ -2,9 +2,13 @@
     <string name="spaceStr"> </string>
 
     <string name="app_name">Lofe</string>
+
     <string name="add_record">Добавить</string>
     <string name="edit_record">Редактировать</string>
     <string name="delete_record">Удалить</string>
+    <string name="follow_link">По ссылке</string>
+    <string name="CopyRecordToClipboard">В буфер обмена</string>
+
     <string name="text_add_tag">Add tag</string>
     <string name="ScreenClock">Часы</string>
     <string name="ButtonSort">Сортировать</string>

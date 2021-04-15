@@ -40,6 +40,7 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
                                                                        LoaderManager.LoaderCallbacks<Cursor> {
     private static final int CM_EDIT_ID = 1;
     private static final int CM_DELETE_ID = 2;
+    private static final int CM_FOL_LINK = 3;
     EditText etRecordText;
     ImageButton ibOk;
     Button btnAddTag;
@@ -176,8 +177,9 @@ public class AddEditRecordActivity extends FragmentActivity implements View.OnCl
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
+        //menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
         menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+        menu.add(0, CM_FOL_LINK, 0, R.string.edit_record);
     }
 
     public boolean onContextItemSelected(MenuItem item) {

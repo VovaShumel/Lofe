@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final int CM_EDIT_ID = 1;
     private static final int CM_DELETE_ID = 2;
+    private static final int CM_FOLLOW_LINK = 3;
+    private static final int CM_COPY_TO_CLIPBOARD = 4;
     public ListView lvData;
     long tagId = 0L;
     ArrayList<Integer> tagIds = null;
@@ -215,6 +217,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreateContextMenu(menu, v, menuInfo);
         //menu.add(0, CM_EDIT_ID, 0, R.string.edit_record);
         menu.add(0, CM_DELETE_ID, 0, R.string.delete_record);
+        menu.add(0, CM_FOLLOW_LINK, 1, R.string.follow_link);
+        menu.add(0, CM_COPY_TO_CLIPBOARD, 2, R.string.CopyRecordToClipboard);
     }
 
     public boolean onContextItemSelected(MenuItem item) {

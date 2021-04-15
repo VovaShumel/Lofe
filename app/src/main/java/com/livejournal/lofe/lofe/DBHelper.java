@@ -125,7 +125,7 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    // получить записи, которым назначены заданные ярлыки
+    // получить записи, которым присвоен опр. ярлык
     static Cursor getTagedRecord(long id_tag) {
         return d().rawQuery("SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
                                 " FROM " + RECORD_TABLE + ", " + RECORD_TAG_TABLE +
@@ -135,7 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
                                 RECORD_TAG_COLUMN_TAG_ID + " = " + id_tag + ";", null);
     }
 
-    // получить записи, которым назначены все заданные ярлыки из списка
+    // получить записи, которым присвоены опр. ярлыки
     static Cursor getTagedRecords(ArrayList<Integer> ids) {
 //        String sql = "SELECT " + RECORD_TABLE + "." + R_COLUMN_ID + ", " + R_COLUMN_TEXT +
 //              " FROM " + RECORD_TABLE + ", " + RECORD_TAG_TABLE +
@@ -150,7 +150,8 @@ public class DBHelper extends SQLiteOpenHelper {
             sql += ids.get(i) + ",";
 
         return d().rawQuery(sql.substring(0, sql.length() - 1) + ") GROUP BY " + RECORD_TAG_COLUMN_RECORD_ID +
-                                                                     " HAVING count(" + RECORD_TAG_COLUMN_TAG_ID + ") = " + ids.size(), null);
+                                                                     " HAVING count(" + RECORD_TAG_COLUMN_TAG_ID + ") = " + ids.size() +
+                                                                     " ORDER BY " + R_COLUMN_CREATION_DATE + " DESC", null);
     }
 
     // получить список ярлыков, дающих record_id в соответствующем столбце для назначенных ярлыков
