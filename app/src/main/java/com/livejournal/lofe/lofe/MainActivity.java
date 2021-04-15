@@ -1,5 +1,7 @@
 package com.livejournal.lofe.lofe;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     HTTPD httpd;
     WSServer WSS;
     Boolean disallowBack;
+    ClipboardManager clipboardManager;
+    ClipData clipData;
 
     public void RedrawItemsList(Cursor cursor) {
         scAdapter.swapCursor(cursor);
@@ -158,6 +162,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //startActivityForResult(intent, 1);
             //getSupportLoaderManager().getLoader(0).forceLoad();                         // получаем новый курсор с данными
         });
+
+        clipboardManager = (ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -235,6 +241,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case CM_DELETE_ID:
                 delRec(acmi.id); // извлекаем id записи и удаляем соответствующую запись в БД
+                break;
+
+            case CM_COPY_TO_CLIPBOARD:
+                //delRec(acmi.id); // извлекаем id записи и удаляем соответствующую запись в БД
+                //clipData = ClipData.newPlainText("t", getRecordText(acmi.id));
+                clipboardManager.setPrimaryClip(ClipData.newPlainText("t", getRecordText(acmi.id)));
                 break;
 
             default:
