@@ -37,7 +37,7 @@ import static com.livejournal.lofe.lofe.DBHelper.*;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private static final int CM_EDIT_ID = 1;
+    private static final int CM_EDIT_ID = 1;            // REFACT вроде это лучше классом сделать, типа перечисления
     private static final int CM_DELETE_ID = 2;
     private static final int CM_FOLLOW_LINK = 3;
     private static final int CM_COPY_TO_CLIPBOARD = 4;
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     WSServer WSS;
     Boolean disallowBack;
     ClipboardManager clipboardManager;
-    ClipData clipData;
 
     public void RedrawItemsList(Cursor cursor) {
         scAdapter.swapCursor(cursor);
@@ -228,25 +227,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public boolean onContextItemSelected(MenuItem item) {
-
         AdapterContextMenuInfo acmi = (AdapterContextMenuInfo) item.getMenuInfo();  // получаем из пункта контекстного меню данные о пункте списка
-
         switch (item.getItemId()) {
 
-            case CM_EDIT_ID:
-                Intent intent = new Intent(this, AddEditRecordActivity.class);  // извлекаем id записи и вызываем меню редактирования записи
-                intent.putExtra("id", acmi.id);
-                startActivity(intent);
-                break;
+            // REFACT это вроде можно удалить
+//            case CM_EDIT_ID:
+//                Intent intent = new Intent(this, AddEditRecordActivity.class);  // извлекаем id записи и вызываем меню редактирования записи
+//                intent.putExtra("id", acmi.id);
+//                startActivity(intent);
+//                break;
 
             case CM_DELETE_ID:
                 delRec(acmi.id); // извлекаем id записи и удаляем соответствующую запись в БД
                 break;
 
+            case CM_FOLLOW_LINK:
+                String rs = getRecordText(acmi.id); // извлекаем текст записи
+                
+
+                break;
+
             case CM_COPY_TO_CLIPBOARD:
-                //delRec(acmi.id); // извлекаем id записи и удаляем соответствующую запись в БД
-                //clipData = ClipData.newPlainText("t", getRecordText(acmi.id));
-                clipboardManager.setPrimaryClip(ClipData.newPlainText("t", getRecordText(acmi.id)));
+                clipboardManager.setPrimaryClip(ClipData.newPlainText("t", getRecordText(acmi.id))); // Копируем текст записи в буфер обмена
                 break;
 
             default:

@@ -84,8 +84,8 @@
         android:layout_marginRight="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="10"
-        android:progress="5"/>
+        android:max="100"
+        android:progress="50"/>
 
     <GridView
         android:background="@color/colorWhite"
