@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.livejournal.lofe.lofe.AlarmReceiver;
 import com.livejournal.lofe.lofe.MyApplication;
+import com.livejournal.lofe.lofe.R;
 
 import java.text.SimpleDateFormat;
 
@@ -105,7 +106,7 @@ public final class LofeRecord implements Parcelable {
         this.text = "";
         this.time = time;
         this.alarmSettings = 0;
-        this.priority = 10;
+        this.priority = R.dimen.max_priority;
     }
 
     public long getId() {

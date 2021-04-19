@@ -87,12 +87,14 @@
         android:max="100"
         android:progress="50"/>
 
-    <GridView
-        android:background="@color/colorWhite"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:id="@+id/gvTags" />
+    <!-- android:max="@dimen/max_priority" -->
+
+<GridView
+    android:background="@color/colorWhite"
+    android:layout_marginTop="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:numColumns="3"
+    android:id="@+id/gvTags" />
 
 </LinearLayout>
